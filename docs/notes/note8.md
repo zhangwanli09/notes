@@ -56,7 +56,7 @@ function observe (value, asRootData) {
 
 #### Observer
 
-Observer是一个类，作用是给对象属性添加getter和setter，用于依赖收集和派发更新。
+Observer作用是给对象属性添加getter和setter，用于依赖收集和派发更新。
 
 Observer的构造函数逻辑：
 1. 首先实例化Dep对象。
@@ -129,7 +129,83 @@ Observer.prototype.observeArray = function observeArray (items) {
 
 #### defineReactive
 
-以上源码中defineReactive的功能是定义一个响应式对象，给对象添加getter和setter。
+defineReactive的作用是定义一个响应式对象，给对象添加getter和setter。
+
+1. 初始化Dep对象的实例。
+2. 拿到obj的属性描述符，然后对子对象递归调用observe方法，保证了子属性也能够变成响应式对象。
+3. 最后利用Object.defineProperty给obj的属性添加getter和setter。
+
+源码：
+```javascript
+/**
+ * Define a reactive property on an Object.
+ */
+function defineReactive$$1 (
+  obj,
+  key,
+  val,
+  customSetter,
+  shallow
+) {
+  var dep = new Dep();
+
+  var property = Object.getOwnPropertyDescriptor(obj, key);
+  if (property && property.configurable === false) {
+    return
+  }
+
+  // cater for pre-defined getter/setters
+  var getter = property && property.get;
+  var setter = property && property.set;
+  if ((!getter || setter) && arguments.length === 2) {
+    val = obj[key];
+  }
+
+  var childOb = !shallow && observe(val);
+  Object.defineProperty(obj, key, {
+    enumerable: true,
+    configurable: true,
+    get: function reactiveGetter () {
+      var value = getter ? getter.call(obj) : val;
+      if (Dep.target) {
+        dep.depend();
+        if (childOb) {
+          childOb.dep.depend();
+          if (Array.isArray(value)) {
+            dependArray(value);
+          }
+        }
+      }
+      return value
+    },
+    set: function reactiveSetter (newVal) {
+      var value = getter ? getter.call(obj) : val;
+      /* eslint-disable no-self-compare */
+      if (newVal === value || (newVal !== newVal && value !== value)) {
+        return
+      }
+      /* eslint-enable no-self-compare */
+      if (customSetter) {
+        customSetter();
+      }
+      // #7981: for accessor properties without setter
+      if (getter && !setter) { return }
+      if (setter) {
+        setter.call(obj, newVal);
+      } else {
+        val = newVal;
+      }
+      childOb = !shallow && observe(newVal);
+      dep.notify();
+    }
+  });
+}
+```
+
+
+
+
+
 
 监听到变化后通知订阅者（watcher）。需要实现一个消息订阅器（Dep）。维护一个数组，用来收集订阅者，数据变动触发notify，再调用订阅者的update方法。
 
