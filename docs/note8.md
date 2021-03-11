@@ -575,6 +575,36 @@ export default class Watcher {
 
 #### 过程分析
 
+Vue的mount的过程是通过`mountComponent`函数，其中有段重要逻辑：
+
+```javascript
+// mountComponent函数部分代码
+
+updateComponent = () => {
+  vm._update(vm._render(), hydrating)
+}
+
+new Watcher(vm, updateComponent, noop, {
+  before () {
+    if (vm._isMounted && !vm._isDestroyed) {
+      callHook(vm, 'beforeUpdate')
+    }
+  }
+}, true /* isRenderWatcher */)
+```
+
+当实例化一个渲染`watcher`的时候：
+1. 首先进入`Watcher`的构造函数，执行`this.get()`方法，进入get函数，会执行`pushTarget(this)`。
+```javascript
+// dep.js
+export function pushTarget (target: ?Watcher) {
+  targetStack.push(target)
+  Dep.target = target
+}
+```
+把当前渲染的`watcher`赋值给`Dep.target`，并压栈（为了恢复用）。
+2. 
+
 
 ### Virtual DOM（虚拟DOM）
 
