@@ -14,7 +14,7 @@
 
 每个组件实例都对应一个watcher实例，它会在组件渲染过程中把接触过的数据property记录为依赖。之后当依赖项的setter触发时，会通知watcher，从而使它关联的组件重新渲染。
 
-![响应式原理图](./imgs/img1.png)
+<img src="./imgs/img1.png" alt="响应式原理图" width="600">
 
 ### Observer
 
