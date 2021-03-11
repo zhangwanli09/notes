@@ -61,9 +61,10 @@ Observer作用是给对象属性添加getter和setter，用于依赖收集和派
 Observer的构造函数逻辑：
 1. 首先实例化Dep对象。
 2. 接着通过执行def函数把自身实例添加到数据对象value的__ob__属性上。def函数是一个非常简单的Object.defineProperty封装。
-3. 对value做判断，对于数组会调用observeArray方法，纯对象则调用walk方法。
-    1. observeArray是遍历数组再次调用observe方法。
-    2. walk是遍历对象的key调用defineReactive方法。
+3. 对value做判断，对于数组会调用protoAugment或copyAugment，observeArray方法，纯对象则调用walk方法。
+    1. 用hasProto判断浏览器是否支持__proto__，如果支持则使用protoAugment函数来覆盖原型，否则调用copyAugment函数将拦截器中的方法挂载到value上。（这里涉及到Vue对部分数组方法的重写）
+    2. observeArray是遍历数组再次调用observe方法。
+    3. walk是遍历对象的key调用defineReactive方法。
 
 def源码：
 ```javascript
@@ -125,6 +126,57 @@ Observer.prototype.observeArray = function observeArray (items) {
     observe(items[i]);
   }
 };
+```
+
+关于Vue对数组方法重写的部分源码：
+
+```javascript
+/*
+ * not type checking this file because flow doesn't play well with
+ * dynamically accessing methods on Array prototype
+ */
+
+var arrayProto = Array.prototype;
+var arrayMethods = Object.create(arrayProto);
+
+var methodsToPatch = [
+  'push',
+  'pop',
+  'shift',
+  'unshift',
+  'splice',
+  'sort',
+  'reverse'
+];
+
+/**
+ * Intercept mutating methods and emit events
+ */
+methodsToPatch.forEach(function (method) {
+  // cache original method
+  var original = arrayProto[method];
+  def(arrayMethods, method, function mutator () {
+    var args = [], len = arguments.length;
+    while ( len-- ) args[ len ] = arguments[ len ];
+
+    var result = original.apply(this, args);
+    var ob = this.__ob__;
+    var inserted;
+    switch (method) {
+      case 'push':
+      case 'unshift':
+        inserted = args;
+        break
+      case 'splice':
+        inserted = args.slice(2);
+        break
+    }
+    if (inserted) { ob.observeArray(inserted); }
+    // notify change
+    ob.dep.notify();
+    return result
+  });
+});
 ```
 
 #### defineReactive
@@ -202,7 +254,7 @@ function defineReactive$$1 (
 }
 ```
 
-
+#### 依赖收集
 
 
 
