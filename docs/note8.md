@@ -256,6 +256,75 @@ function defineReactive$$1 (
 
 #### 依赖收集
 
+响应式对象的getter部分就是做依赖收集的。defineReactive方法中重点关注：
+
+1. `const dep = new Dep()`实例化一个Dep实例。
+2. get函数中通过`dep.depend()`做依赖收集。这里涉及到`childOb`的判断逻辑。
+
+Dep是整个getter依赖收集的核心。
+
+Dep源码：
+```javascript
+var uid = 0;
+
+/**
+ * A dep is an observable that can have multiple
+ * directives subscribing to it.
+ */
+var Dep = function Dep () {
+  this.id = uid++;
+  this.subs = [];
+};
+
+Dep.prototype.addSub = function addSub (sub) {
+  this.subs.push(sub);
+};
+
+Dep.prototype.removeSub = function removeSub (sub) {
+  remove(this.subs, sub);
+};
+
+Dep.prototype.depend = function depend () {
+  if (Dep.target) {
+    Dep.target.addDep(this);
+  }
+};
+
+Dep.prototype.notify = function notify () {
+  // stabilize the subscriber list first
+  var subs = this.subs.slice();
+  if (!config.async) {
+    // subs aren't sorted in scheduler if not running async
+    // we need to sort them now to make sure they fire in correct
+    // order
+    subs.sort(function (a, b) { return a.id - b.id; });
+  }
+  for (var i = 0, l = subs.length; i < l; i++) {
+    subs[i].update();
+  }
+};
+
+// The current target watcher being evaluated.
+// This is globally unique because only one watcher
+// can be evaluated at a time.
+Dep.target = null;
+var targetStack = [];
+
+function pushTarget (target) {
+  targetStack.push(target);
+  Dep.target = target;
+}
+
+function popTarget () {
+  targetStack.pop();
+  Dep.target = targetStack[targetStack.length - 1];
+}
+```
+
+Dep实际上是对Watcher的管理。注意点：
+
+1. 静态属性`target`，这是全局唯一`Watcher`。在同一时间只能有一个全局`Watcher`被计算。
+2. 属性`subs`也是`Watcher`的数组。
 
 
 
