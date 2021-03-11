@@ -35,9 +35,9 @@ Observer.prototype.walk = function walk (obj) {
 源码：
 ```javascript
 /*
-  * not type checking this file because flow doesn't play well with
-  * dynamically accessing methods on Array prototype
-  */
+ * not type checking this file because flow doesn't play well with
+ * dynamically accessing methods on Array prototype
+ */
 
 var arrayProto = Array.prototype;
 var arrayMethods = Object.create(arrayProto);

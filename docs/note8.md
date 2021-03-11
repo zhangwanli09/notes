@@ -14,7 +14,7 @@
 
 每个组件实例都对应一个watcher实例，它会在组件渲染过程中把接触过的数据property记录为依赖。之后当依赖项的setter触发时，会通知watcher，从而使它关联的组件重新渲染。
 
-<img src="./imgs/img1.png" alt="响应式原理图" width="600">
+![响应式原理图](./imgs/img1.png)
 
 ### Observer
 
@@ -132,7 +132,7 @@ Observer.prototype.observeArray = function observeArray (items) {
 defineReactive的作用是定义一个响应式对象，给对象添加getter和setter。
 
 1. 初始化Dep对象的实例。
-2. 拿到obj的属性描述符，然后对子对象递归调用observe方法，保证了子属性也能够变成响应式对象。
+2. 拿到obj的属性描述符，然后对子对象递归调用observe方法，保证子属性也能够变成响应式对象。
 3. 最后利用Object.defineProperty给obj的属性添加getter和setter。
 
 源码：
