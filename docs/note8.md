@@ -16,9 +16,7 @@
 
 ![响应式原理图](./imgs/img1.png)
 
-### Observer
-
-#### observe
+### observe
 
 observe是用来监听数据变化的。
 
@@ -54,7 +52,7 @@ function observe (value, asRootData) {
 }
 ```
 
-#### Observer
+### Observer
 
 Observer作用是给对象属性添加getter和setter，用于依赖收集和派发更新。
 
@@ -254,12 +252,14 @@ function defineReactive$$1 (
 }
 ```
 
-#### 依赖收集
+### 依赖收集
 
 响应式对象的getter部分就是做依赖收集的。defineReactive方法中重点关注：
 
 1. `const dep = new Dep()`实例化一个Dep实例。
 2. get函数中通过`dep.depend()`做依赖收集。这里涉及到`childOb`的判断逻辑。
+
+#### Dep
 
 Dep是整个getter依赖收集的核心。
 
@@ -332,13 +332,7 @@ Dep实际上是对Watcher的管理。注意点：
 
 Dep类定义了一些属性和方法，特别注意的是它有一个静态属性target，这是全局唯一Watcher，因为在同一时间只能有一个全局Watcher被计算，它的自身属性subs也是Wacther的数组。Dep实际上就是对Watcher的一种管理。
 
-示例代码：
-![示例](./imgs/img2.png)
-
 在getter中，向订阅器中添加订阅者（Watcher）。
-
-示例代码：
-![示例](./imgs/img3.png)
 
 ### Compile
 
@@ -348,10 +342,6 @@ compile作用是解析模版指令，将模版中的变量替换成数据，然�
 2. 调用对应的指令渲染函数进行数据渲染。
 3. 调用对应的指令更新函数进行绑定，通过new Watcher()添加回调来接收数据变化的通知。
 
-示例代码：
-![示例](./imgs/img4.png)
-
-
 ### Watcher
 
 作用是实现Observer和Compile之前通信。
@@ -359,9 +349,6 @@ compile作用是解析模版指令，将模版中的变量替换成数据，然�
 1. 在自身实例化时向属性订阅器（dep）添加自己。
 2. 自身有一个update()方法。
 3. 待属性变动dep.notify()通知时，调用自身update()方法，并触发Compile中绑定的回调。
-
-示例代码：
-![示例](./imgs/img5.png)
 
 源码：（依赖项更新时将被调用）
 ```javascript
