@@ -20,12 +20,12 @@ Object.defineProperty(obj, prop, descriptor)
  * getter/setters. This method should only be called when
  * value type is Object.
  */
-Observer.prototype.walk = function walk (obj) {
-  var keys = Object.keys(obj);
-  for (var i = 0; i < keys.length; i++) {
-    defineReactive$$1(obj, keys[i]);
+walk (obj: Object) {
+  const keys = Object.keys(obj)
+  for (let i = 0; i < keys.length; i++) {
+    defineReactive(obj, keys[i])
   }
-};
+}
 ```
 
 ### Vue重写数组
@@ -34,15 +34,10 @@ Observer.prototype.walk = function walk (obj) {
 
 源码：
 ```javascript
-/*
- * not type checking this file because flow doesn't play well with
- * dynamically accessing methods on Array prototype
- */
+const arrayProto = Array.prototype
+export const arrayMethods = Object.create(arrayProto)
 
-var arrayProto = Array.prototype;
-var arrayMethods = Object.create(arrayProto);
-
-var methodsToPatch = [
+const methodsToPatch = [
   'push',
   'pop',
   'shift',
@@ -50,36 +45,33 @@ var methodsToPatch = [
   'splice',
   'sort',
   'reverse'
-];
+]
 
 /**
  * Intercept mutating methods and emit events
  */
 methodsToPatch.forEach(function (method) {
   // cache original method
-  var original = arrayProto[method];
-  def(arrayMethods, method, function mutator () {
-    var args = [], len = arguments.length;
-    while ( len-- ) args[ len ] = arguments[ len ];
-
-    var result = original.apply(this, args);
-    var ob = this.__ob__;
-    var inserted;
+  const original = arrayProto[method]
+  def(arrayMethods, method, function mutator (...args) {
+    const result = original.apply(this, args)
+    const ob = this.__ob__
+    let inserted
     switch (method) {
       case 'push':
       case 'unshift':
-        inserted = args;
+        inserted = args
         break
       case 'splice':
-        inserted = args.slice(2);
+        inserted = args.slice(2)
         break
     }
-    if (inserted) { ob.observeArray(inserted); }
+    if (inserted) ob.observeArray(inserted)
     // notify change
-    ob.dep.notify();
+    ob.dep.notify()
     return result
-  });
-});
+  })
+})
 ```
 
 1. 源码中使用Object.create()的目的是避免全局污染Array数组，只影响Vue里的数组。
