@@ -575,8 +575,6 @@ export default class Watcher {
 
 #### 过程分析
 
-当对数据对象的访问会触发他们的getter方法，那么这些对象什么时候被访问？
-
 Vue的mount的过程是通过`mountComponent`函数，其中有段重要逻辑：
 
 ```javascript
@@ -597,26 +595,62 @@ new Watcher(vm, updateComponent, noop, {
 
 当实例化一个渲染`watcher`的时候（参考上面Watcher源码）：
 
-1. 首先进入`Watcher`的构造函数，执行`this.get()`方法。进入get函数，首先会执行：
-  ```javascript
-  pushTarget(this)
+首先进入`Watcher`的构造函数，执行`this.get()`方法。进入get函数，首先会执行：
+```javascript
+pushTarget(this)
 
-  // dep.js
-  export function pushTarget (target: ?Watcher) {
-    targetStack.push(target)
-    Dep.target = target
-  }
-  ```
-把当前渲染的`watcher`赋值给`Dep.target`，并压栈（为了恢复用）。
-
-2. 接着执行：
-  ```javascript
-  value = this.getter.call(vm, vm)
-  ```
+// dep.js
+export function pushTarget (target: ?Watcher) {
+  targetStack.push(target)
+  Dep.target = target
+}
+```
+把当前渲染的`watcher`赋值给`Dep.target`，并压栈（为了恢复用）。接着执行：
+```javascript
+value = this.getter.call(vm, vm)
+```
 this.getter对应的是Watcher传入的第二个参数`updateComponent`函数，实际上是在执行：
-  ```javascript
-  vm._update(vm._render(), hydrating)
-  ```
+```javascript
+vm._update(vm._render(), hydrating)
+```
+它会先执行`vm._render()`方法生成渲染VNode，在这个过程中对`vm`上的数据访问，这时就会触发数据对象的getter。（注意：在Vue的初始化阶段，`initState(vm)`方法中`initData(vm)`，内部会调用`observe`方法把data变成响应式）。
+
+每个对象值的getter都有一个`dep`，在触发getter时会调用`dep.depend()`，也就会执行`Dep.target.addDep(this)`。
+```javascript
+// dep.js
+depend () {
+  if (Dep.target) {
+    Dep.target.addDep(this)
+  }
+}
+```
+
+上面有提到，因为`Dep.target`已经被赋值为当前`watcher`，那么就执行`addDep`方法：
+```javascript
+/**
+ * Add a dependency to this directive.
+ */
+addDep (dep: Dep) {
+  const id = dep.id
+  if (!this.newDepIds.has(id)) {
+    this.newDepIds.add(id)
+    this.newDeps.push(dep)
+    if (!this.depIds.has(id)) {
+      dep.addSub(this)
+    }
+  }
+}
+```
+这里会做些逻辑判断，保证统一数据不会被添加多次，然后执行`dep.addSub(this)`，内部会执行`this.subs.push(sub)`，把当前的`watcher`订阅到这个数据持有的dep的`subs`中，目的是为了后续数据变化时能通知到哪些subs做准备。
+```javascript
+addSub (sub: Watcher) {
+  this.subs.push(sub)
+}
+```
+
+所以在`vm._render()`过程中，会触发所有数据的getter，完成依赖收集。
+
+
 
 
 ### Virtual DOM（虚拟DOM）
