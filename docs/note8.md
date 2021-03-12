@@ -575,6 +575,8 @@ export default class Watcher {
 
 #### 过程分析
 
+当对数据对象的访问会触发他们的getter方法，那么这些对象什么时候被访问？
+
 Vue的mount的过程是通过`mountComponent`函数，其中有段重要逻辑：
 
 ```javascript
@@ -593,17 +595,28 @@ new Watcher(vm, updateComponent, noop, {
 }, true /* isRenderWatcher */)
 ```
 
-当实例化一个渲染`watcher`的时候：
-1. 首先进入`Watcher`的构造函数，执行`this.get()`方法，进入get函数，会执行`pushTarget(this)`。
-```javascript
-// dep.js
-export function pushTarget (target: ?Watcher) {
-  targetStack.push(target)
-  Dep.target = target
-}
-```
+当实例化一个渲染`watcher`的时候（参考上面Watcher源码）：
+
+1. 首先进入`Watcher`的构造函数，执行`this.get()`方法。进入get函数，首先会执行：
+  ```javascript
+  pushTarget(this)
+
+  // dep.js
+  export function pushTarget (target: ?Watcher) {
+    targetStack.push(target)
+    Dep.target = target
+  }
+  ```
 把当前渲染的`watcher`赋值给`Dep.target`，并压栈（为了恢复用）。
-2. 
+
+2. 接着执行：
+  ```javascript
+  value = this.getter.call(vm, vm)
+  ```
+this.getter对应的是Watcher传入的第二个参数`updateComponent`函数，实际上是在执行：
+  ```javascript
+  vm._update(vm._render(), hydrating)
+  ```
 
 
 ### Virtual DOM（虚拟DOM）
