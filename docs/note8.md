@@ -328,7 +328,7 @@ export function popTarget () {
 Dep实际上是对Watcher的管理。注意点：
 
 1. 静态属性`target`，这是全局唯一`Watcher`。在同一时间只能有一个全局`Watcher`被计算。
-2. 属性`subs`也是`Watcher`的数组。
+2. 它的自身属性`subs`也是`Watcher`的数组。
 
 #### Watcher
 
@@ -340,6 +340,7 @@ this.newDeps = []
 this.depIds = new Set()
 this.newDepIds = new Set()
 ```
+其中，this.deps和this.newDeps表示Watcher实例持有的Dep实例的数组；而this.depIds和this.newDepIds分别代表this.deps和this.newDeps的id Set（Set是ES6的数据类型）。
 
 还定义了些原型方法，依赖收集相关的有`get`、`addDep`、`cleanupDeps`方法。
 
@@ -575,6 +576,11 @@ export default class Watcher {
 
 #### 过程分析
 
+依赖收集大致过程：
+1. Vue的`mount`过程中实例化一个`Watcher`。
+2. 执行`pushTarget(this)`，把当前的watcher赋值给`Dep.target`。
+3. 执行`vm._render()`（通过参数`mountComponent`传入）生成vnode的过程触发数据的`getter`，内部调用`dep.depend()`，把当前的`watcher`订阅到这个数据持有的dep的`subs`中，为后续数据变化通知做准备。
+
 Vue的mount的过程是通过`mountComponent`函数，其中有段重要逻辑：
 
 ```javascript
@@ -613,9 +619,9 @@ this.getter对应的是Watcher传入的第二个参数`updateComponent`函数，
 ```javascript
 vm._update(vm._render(), hydrating)
 ```
-它会先执行`vm._render()`方法生成渲染VNode，在这个过程中对`vm`上的数据访问，这时就会触发数据对象的getter。（注意：在Vue的初始化阶段，`initState(vm)`方法中`initData(vm)`，内部会调用`observe`方法把data变成响应式）。
+它会先执行`vm._render()`方法生成渲染VNode，在这个过程中对vm上的数据访问，这时就会触发数据对象的getter。（注意：在Vue的初始化阶段，`initState(vm)`方法中`initData(vm)`，内部会调用`observe`方法把data变成响应式）。
 
-每个对象值的getter都有一个`dep`，在触发getter时会调用`dep.depend()`，也就会执行`Dep.target.addDep(this)`。
+每个对象值的getter都有一个dep，在触发getter时会调用`dep.depend()`，也就会执行`Dep.target.addDep(this)`。
 ```javascript
 // dep.js
 depend () {
@@ -650,8 +656,61 @@ addSub (sub: Watcher) {
 
 所以在`vm._render()`过程中，会触发所有数据的getter，完成依赖收集。
 
+完成依赖收集后的逻辑：
 
+```javascript
+if (this.deep) {
+  traverse(value)
+}
+popTarget()
+this.cleanupDeps()
+```
 
+1. `traverse(value)`递归访问value，触发它所有子项的getter。
+2. `popTarget()`把Dep.target恢复到上一个状态，因为当前vm的数据依赖收集已经完成，那么对应的渲染Dep.target也需要改变。
+  ```javascript
+  export function popTarget () {
+    targetStack.pop()
+    Dep.target = targetStack[targetStack.length - 1]
+  }
+  ```
+3. `this.cleanupDeps()`依赖清空的过程。
+  ```javascript
+  /**
+   * Clean up for dependency collection.
+   */
+  cleanupDeps () {
+    let i = this.deps.length
+    while (i--) {
+      const dep = this.deps[i]
+      if (!this.newDepIds.has(dep.id)) {
+        dep.removeSub(this)
+      }
+    }
+    let tmp = this.depIds
+    this.depIds = this.newDepIds
+    this.newDepIds = tmp
+    this.newDepIds.clear()
+    tmp = this.deps
+    this.deps = this.newDeps
+    this.newDeps = tmp
+    this.newDeps.length = 0
+  }
+  ```
+
+考虑到Vue是数据驱动的，所以每次数据变化都会重新render，那么vm._render()方法又会再次执行，并再次触发数据的getters，所以Watcher在构造函数中会初始化2个Dep实例数组，newDeps表示新添加的Dep实例数组，而deps表示上一次添加的Dep实例数组。
+
+在执行`cleanupDeps`函数的时候，会首先遍历deps，移除对dep.subs数组中Wathcer的订阅，然后把newDepIds和depIds交换，newDeps和deps交换，并把newDepIds和newDeps清空。
+
+那么为什么需要做deps订阅的移除呢，在添加deps的订阅过程，已经能通过id去重避免重复订阅了。
+
+考虑到一种场景，我们的模板会根据v-if去渲染不同子模板a和b，当我们满足某种条件的时候渲染a的时候，会访问到a中的数据，这时候我们对a使用的数据添加了getter，做了依赖收集，那么当我们去修改a的数据的时候，理应通知到这些订阅者。那么如果我们一旦改变了条件渲染了b模板，又会对b使用的数据添加了getter，如果我们没有依赖移除的过程，那么这时候我去修改a模板的数据，会通知a数据的订阅的回调，这显然是有浪费的。
+
+因此Vue设计了在每次添加完新的订阅，会移除掉旧的订阅，这样就保证了在我们刚才的场景中，如果渲染b模板的时候去修改a模板的数据，a数据订阅回调已经被移除了，所以不会有任何浪费。
+
+#### 总结
+
+收集依赖的目的是为了当这些响应式数据发生变化，触发它们的setter的时候，能知道应该通知哪些订阅者去做相应的逻辑处理，这个过程叫派发更新，其实Watcher和Dep就是一个非常经典的观察者设计模式的实现。
 
 ### Virtual DOM（虚拟DOM）
 
