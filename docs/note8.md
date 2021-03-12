@@ -828,4 +828,4 @@ export function createElement (
 ![示例](./imgs/img6.png)
 
 
-> 参考资料：https://ustbhuangyi.github.io/vue-analysis/v2/prepare/
+> 这个笔记是参考此[文档](https://ustbhuangyi.github.io/vue-analysis/v2/prepare/)整理记录搬运，原文档非常赞。感谢作者🙏非常赞。
