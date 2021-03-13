@@ -17,7 +17,11 @@
       loadSidebar: true,
       subMaxLevel: 4,
       loadNavbar: true,
-      coverpage: true
+      coverpage: true,
+      alias: {
+        '/.*/_sidebar.md': '/_sidebar.md',
+        '/.*/_navbar.md': '/_navbar.md'
+      }
     }
 
     if (typeof navigator.serviceWorker !== 'undefined') {
