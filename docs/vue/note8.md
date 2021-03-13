@@ -13,6 +13,165 @@ Vue官网对响应式原理的描述：
 
 ### 响应式对象
 
+Vue实现响应式的核心是利用`Object.defineProperty()`，具体用法参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)。
+
+当把对象传入Vue实例作为data选项，Vue将遍历此对象所有的属性，并使用Object.defineProperty把这些属性全部转为`getter/setter`。可以简单的把这种对象称为响应式对象。Object.defineProperty是ES5中一个无法shim的特性，这也就是Vue不支持IE8以及更低版本浏览器的原因。
+
+#### initState
+
+在Vue的初始化阶段，`_init`方法执行的时候，会执行`initState(vm)`方法，它主要是对props、methods、data、computed和watch等属性做初始化操作。
+
+```javascript
+export function initState (vm: Component) {
+  vm._watchers = []
+  const opts = vm.$options
+  if (opts.props) initProps(vm, opts.props)
+  if (opts.methods) initMethods(vm, opts.methods)
+  if (opts.data) {
+    initData(vm)
+  } else {
+    observe(vm._data = {}, true /* asRootData */)
+  }
+  if (opts.computed) initComputed(vm, opts.computed)
+  if (opts.watch && opts.watch !== nativeWatch) {
+    initWatch(vm, opts.watch)
+  }
+}
+```
+
+重点分析props和data的初始化：
+
+`initProps`的主要过程是遍历定义的props。遍历过程主要做两件事：
+1. 调用`defineReactive`方法，把每个props的值变成响应式。可以通过`vm._props.xxx`访问到定义props中对应的属性。
+2. 通过`proxy`把`vm._props.xxx`的访问代理到`vm.xxx`上。
+
+```javascript
+function initProps (vm: Component, propsOptions: Object) {
+  const propsData = vm.$options.propsData || {}
+  const props = vm._props = {}
+  // cache prop keys so that future props updates can iterate using Array
+  // instead of dynamic object key enumeration.
+  const keys = vm.$options._propKeys = []
+  const isRoot = !vm.$parent
+  // root instance props should be converted
+  if (!isRoot) {
+    toggleObserving(false)
+  }
+  for (const key in propsOptions) {
+    keys.push(key)
+    const value = validateProp(key, propsOptions, propsData, vm)
+    /* istanbul ignore else */
+    if (process.env.NODE_ENV !== 'production') {
+      const hyphenatedKey = hyphenate(key)
+      if (isReservedAttribute(hyphenatedKey) ||
+          config.isReservedAttr(hyphenatedKey)) {
+        warn(
+          `"${hyphenatedKey}" is a reserved attribute and cannot be used as component prop.`,
+          vm
+        )
+      }
+      defineReactive(props, key, value, () => {
+        if (!isRoot && !isUpdatingChildComponent) {
+          warn(
+            `Avoid mutating a prop directly since the value will be ` +
+            `overwritten whenever the parent component re-renders. ` +
+            `Instead, use a data or computed property based on the prop's ` +
+            `value. Prop being mutated: "${key}"`,
+            vm
+          )
+        }
+      })
+    } else {
+      defineReactive(props, key, value)
+    }
+    // static props are already proxied on the component's prototype
+    // during Vue.extend(). We only need to proxy props defined at
+    // instantiation here.
+    if (!(key in vm)) {
+      proxy(vm, `_props`, key)
+    }
+  }
+  toggleObserving(true)
+}
+```
+
+`initData`的主要过程也是做两件事情：
+1. 对data函数返回对象遍历，通过`proxy`把每一个值`vm._data.xxx`都代理到`vm.xxx`上。
+2. 调用`observe`方法观测整个data的变化，把data变成响应式，可以通过`vm._data.xxx`访问到定义data返回函数中对应的属性。
+
+```javascript
+function initData (vm: Component) {
+  let data = vm.$options.data
+  data = vm._data = typeof data === 'function'
+    ? getData(data, vm)
+    : data || {}
+  if (!isPlainObject(data)) {
+    data = {}
+    process.env.NODE_ENV !== 'production' && warn(
+      'data functions should return an object:\n' +
+      'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
+      vm
+    )
+  }
+  // proxy data on instance
+  const keys = Object.keys(data)
+  const props = vm.$options.props
+  const methods = vm.$options.methods
+  let i = keys.length
+  while (i--) {
+    const key = keys[i]
+    if (process.env.NODE_ENV !== 'production') {
+      if (methods && hasOwn(methods, key)) {
+        warn(
+          `Method "${key}" has already been defined as a data property.`,
+          vm
+        )
+      }
+    }
+    if (props && hasOwn(props, key)) {
+      process.env.NODE_ENV !== 'production' && warn(
+        `The data property "${key}" is already declared as a prop. ` +
+        `Use prop default value instead.`,
+        vm
+      )
+    } else if (!isReserved(key)) {
+      proxy(vm, `_data`, key)
+    }
+  }
+  // observe data
+  observe(data, true /* asRootData */)
+}
+```
+
+`props`和`data`的初始化都是把它们变成响应式对象。
+
+#### proxy
+
+`proxy`的作用是把`props`和`data`上的属性代理到`vm`实例上。所以定义在props中的属性，也可以通过vm实例访问到。
+
+```javascript
+const sharedPropertyDefinition = {
+  enumerable: true,
+  configurable: true,
+  get: noop,
+  set: noop
+}
+
+export function proxy (target: Object, sourceKey: string, key: string) {
+  sharedPropertyDefinition.get = function proxyGetter () {
+    return this[sourceKey][key]
+  }
+  sharedPropertyDefinition.set = function proxySetter (val) {
+    this[sourceKey][key] = val
+  }
+  Object.defineProperty(target, key, sharedPropertyDefinition)
+}
+```
+
+通过Object.defineProperty把`target[sourceKey][key]`的读写变成对`target[key]`的读写。
+1. 对于props，对`vm._props.xxx`的读写变成了`vm.xxx`的读写。
+2. 对于data，对`vm._data.xxx`的读写变成了对`vm.xxx`的读写。
+
 #### observe
 
 observe是用来监听数据变化的。
@@ -246,6 +405,10 @@ export function defineReactive (
   })
 }
 ```
+
+#### 总结
+
+响应式对象的核心就是利用`Object.defineProperty`给数据添加了`getter/setter`，目的就是为了在访问数据和修改数据时能自动执行一些逻辑：getter做依赖收集，setter做派发更新。
 
 ### 依赖收集
 
