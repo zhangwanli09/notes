@@ -9,7 +9,7 @@ Vue官网对响应式原理的描述：
 
 每个组件实例都对应一个watcher实例，它会在组件渲染过程中把接触过的数据property记录为依赖。之后当依赖项的setter触发时，会通知watcher，从而使它关联的组件重新渲染。
 
-![响应式原理图](./imgs/img1.png)
+![响应式原理图](../imgs/img1.png)
 
 ### observe
 
@@ -1089,10 +1089,10 @@ export function createElement (
 
 从初始化Vue到最终渲染的整个过程，参考下图：
 
-![示例](./imgs/img6.png)
+![示例](../imgs/img6.png)
 
 ### 原理图
 
-![原理图](./imgs/img2.png)
+![原理图](../imgs/img2.png)
 
 > 这个笔记是参考此[文档](https://ustbhuangyi.github.io/vue-analysis/v2/prepare/)整理记录搬运，原文档非常赞。我是怕丢了重新整理份保存，感谢作者🙏非常赞。
