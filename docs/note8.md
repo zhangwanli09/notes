@@ -5,12 +5,7 @@
 1. 无需显示调用。例如Vue运用数据劫持+发布订阅，在数据变动时发布消息给订阅者，触发相应的监听回调驱动视图更新。
 2. 可精确得知变化数据。例如劫持属性的setter，当属性改变可以得到变化的内容，不需要做额外的diff操作。
 
-
-### 实现思路
-
-1. 通过Object.defineProperty生成监听器Observer监听对象属性，在属性发生变化后通知订阅者。
-2. 通过Compile解析编译模版指令，根据指令模版替换数据，绑定相应的更新函数。
-3. 通过Watcher衔接Observer和Compile，订阅并收到每个属性变化的通知，执行指令绑定的回调函数更新视图。
+Vue官网对响应式原理的描述：
 
 每个组件实例都对应一个watcher实例，它会在组件渲染过程中把接触过的数据property记录为依赖。之后当依赖项的setter触发时，会通知watcher，从而使它关联的组件重新渲染。
 
@@ -577,8 +572,8 @@ export default class Watcher {
 #### 过程分析
 
 依赖收集大致过程：
-1. Vue的`mount`过程中实例化一个`Watcher`。
-2. 执行`pushTarget(this)`，把当前的watcher赋值给`Dep.target`。
+1. Vue的`mount`过程中实例化一个渲染`watcher`。
+2. 执行`pushTarget(this)`，把当前的渲染watcher赋值给`Dep.target`。
 3. 执行`vm._render()`（通过参数`mountComponent`传入）生成vnode的过程触发数据的`getter`，内部调用`dep.depend()`，把当前的`watcher`订阅到这个数据持有的dep的`subs`中，为后续数据变化通知做准备。
 
 Vue的mount的过程是通过`mountComponent`函数，其中有段重要逻辑：
@@ -712,6 +707,275 @@ this.cleanupDeps()
 
 收集依赖的目的是为了当这些响应式数据发生变化，触发它们的setter的时候，能知道应该通知哪些订阅者去做相应的逻辑处理，这个过程叫派发更新，其实Watcher和Dep就是一个非常经典的观察者设计模式的实现。
 
+### 派发更新
+
+上面依赖收集的目的是为了当修改数据时，可以对相关的依赖派发更新。参考`setter`部分逻辑：
+
+```javascript
+// defineReactive 方法内 setter 部分
+Object.defineProperty(obj, key, {
+  enumerable: true,
+  configurable: true,
+  // ...省略get
+  set: function reactiveSetter (newVal) {
+    const value = getter ? getter.call(obj) : val
+    /* eslint-disable no-self-compare */
+    if (newVal === value || (newVal !== newVal && value !== value)) {
+      return
+    }
+    /* eslint-enable no-self-compare */
+    if (process.env.NODE_ENV !== 'production' && customSetter) {
+      customSetter()
+    }
+    // #7981: for accessor properties without setter
+    if (getter && !setter) return
+    if (setter) {
+      setter.call(obj, newVal)
+    } else {
+      val = newVal
+    }
+    childOb = !shallow && observe(newVal)
+    dep.notify()
+  }
+})
+```
+
+setter中2个关键逻辑：
+1. shallow如果是false，会对新设置的值变成响应式对象`childOb = !shallow && observe(newVal)`。
+2. 通知所有的订阅者`dep.notify()`。
+
+#### 过程分析
+
+当对响应式数据做修改，会触发setter逻辑，会调用`dep.notify()`，它是Dep的实例方法。
+
+```javascript
+export default class Dep {
+  // ...省略
+  notify () {
+    // stabilize the subscriber list first
+    const subs = this.subs.slice()
+    if (process.env.NODE_ENV !== 'production' && !config.async) {
+      // subs aren't sorted in scheduler if not running async
+      // we need to sort them now to make sure they fire in correct
+      // order
+      subs.sort((a, b) => a.id - b.id)
+    }
+    for (let i = 0, l = subs.length; i < l; i++) {
+      subs[i].update()
+    }
+  }
+}
+```
+
+遍历所有`subs`，也就是Watcher的实例数组，然后调用每个`Watcher`的`update`方法。
+
+```javascript
+export default class Watcher {
+  // ...省略
+
+  /**
+   * Subscriber interface.
+   * Will be called when a dependency changes.
+   */
+  update () {
+    /* istanbul ignore else */
+    if (this.lazy) {
+      this.dirty = true
+    } else if (this.sync) {
+      this.run()
+    } else {
+      queueWatcher(this)
+    }
+  }
+}
+```
+
+对于Watcher的不同状态，会执行不同的逻辑，在一般组件数据更新的场景，会走最后一个逻辑`queueWatcher(this)`。
+
+#### queueWatcher
+
+```javascript
+const queue: Array<Watcher> = []
+let has: { [key: number]: ?true } = {}
+let waiting = false
+let flushing = false
+let index = 0
+
+/**
+ * Push a watcher into the watcher queue.
+ * Jobs with duplicate IDs will be skipped unless it's
+ * pushed when the queue is being flushed.
+ */
+export function queueWatcher (watcher: Watcher) {
+  const id = watcher.id
+  if (has[id] == null) {
+    has[id] = true
+    if (!flushing) {
+      queue.push(watcher)
+    } else {
+      // if already flushing, splice the watcher based on its id
+      // if already past its id, it will be run next immediately.
+      let i = queue.length - 1
+      while (i > index && queue[i].id > watcher.id) {
+        i--
+      }
+      queue.splice(i + 1, 0, watcher)
+    }
+    // queue the flush
+    if (!waiting) {
+      waiting = true
+
+      if (process.env.NODE_ENV !== 'production' && !config.async) {
+        flushSchedulerQueue()
+        return
+      }
+      nextTick(flushSchedulerQueue)
+    }
+  }
+}
+```
+这里引入一个队列的概念，也是Vue在做派发更新时的优化点，它并不会每次数据改变都会触发watcher的回调，而是把这些watcher先添加到队列`queue`里，然后在`nextTick`后执行`flushSchedulerQueue`。
+
+几个细节点：
+1. has保证同一个Watcher只添加一次。
+2. waiting保证nextTick只会被调用一次。
+3. nextTick可以理解它是在下一个tick，也就是异步的去执行flushSchedulerQueue。
+
+#### flushSchedulerQueue
+
+flushSchedulerQueue的一些重要逻辑：
+1. 队列排序。对队列做从小到大排序，目的是确保以下几点：
+    1. 组件的更新由父到子，因为父组件的创建过程是先于子的，所以watcher的创建也是先父后子，执行顺序也应该保持先父后子。
+    2. 用户的自定义watcher要优先于渲染watcher执行，因为用户自定义watcher是在渲染watcher之前创建的。
+    3. 如果一个组件在父组件的watcher执行期间被销毁，那么它对应的watcher执行都可以被跳过，所以父组件的watcher应该先执行。
+2. 队列遍历。拿到对应的watcher，执行`watcher.run()`。
+3. 状态恢复。执行`resetSchedulerState`函数。它的逻辑就是把这些控制流程状态的一些变量恢复到初始值，把watcher队列清空。
+
+```javascript
+const queue: Array<Watcher> = []
+const activatedChildren: Array<Component> = []
+let has: { [key: number]: ?true } = {}
+let circular: { [key: number]: number } = {}
+let flushing = false
+let index = 0
+
+/**
+ * Flush both queues and run the watchers.
+ */
+function flushSchedulerQueue () {
+  currentFlushTimestamp = getNow()
+  flushing = true
+  let watcher, id
+
+  // Sort queue before flush.
+  // This ensures that:
+  // 1. Components are updated from parent to child. (because parent is always
+  //    created before the child)
+  // 2. A component's user watchers are run before its render watcher (because
+  //    user watchers are created before the render watcher)
+  // 3. If a component is destroyed during a parent component's watcher run,
+  //    its watchers can be skipped.
+  queue.sort((a, b) => a.id - b.id)
+
+  // do not cache length because more watchers might be pushed
+  // as we run existing watchers
+  for (index = 0; index < queue.length; index++) {
+    watcher = queue[index]
+    if (watcher.before) {
+      watcher.before()
+    }
+    id = watcher.id
+    has[id] = null
+    watcher.run()
+    // in dev build, check and stop circular updates.
+    if (process.env.NODE_ENV !== 'production' && has[id] != null) {
+      circular[id] = (circular[id] || 0) + 1
+      if (circular[id] > MAX_UPDATE_COUNT) {
+        warn(
+          'You may have an infinite update loop ' + (
+            watcher.user
+              ? `in watcher with expression "${watcher.expression}"`
+              : `in a component render function.`
+          ),
+          watcher.vm
+        )
+        break
+      }
+    }
+  }
+
+  // keep copies of post queues before resetting state
+  const activatedQueue = activatedChildren.slice()
+  const updatedQueue = queue.slice()
+
+  resetSchedulerState()
+
+  // call component updated and activated hooks
+  callActivatedHooks(activatedQueue)
+  callUpdatedHooks(updatedQueue)
+
+  // devtool hook
+  /* istanbul ignore if */
+  if (devtools && config.devtools) {
+    devtools.emit('flush')
+  }
+}
+```
+
+#### watcher.run()
+
+watcher.run()逻辑分析：
+
+```javascript
+export default class Watcher {
+  // ...省略
+
+  /**
+   * Scheduler job interface.
+   * Will be called by the scheduler.
+   */
+  run () {
+    if (this.active) {
+      const value = this.get()
+      if (
+        value !== this.value ||
+        // Deep watchers and watchers on Object/Arrays should fire even
+        // when the value is the same, because the value may
+        // have mutated.
+        isObject(value) ||
+        this.deep
+      ) {
+        // set new value
+        const oldValue = this.value
+        this.value = value
+        if (this.user) {
+          try {
+            this.cb.call(this.vm, value, oldValue)
+          } catch (e) {
+            handleError(e, this.vm, `callback for watcher "${this.expression}"`)
+          }
+        } else {
+          this.cb.call(this.vm, value, oldValue)
+        }
+      }
+    }
+  }
+}
+```
+
+1. 通过执行`this.get()`得到当前的值，判断如果满足新旧值不等、新值是对象类型、deep模式任何一个条件，则执行watcher的回调`cb`，回调函数会传入新值和旧值，这就是当添加自定义watcher的时候能在回调函数的参数中拿到新旧值的原因。
+2. 对于渲染watcher而言，在执行this.get()方法求值的时候，会执行getter方法：
+  ```javascript
+  updateComponent = () => {
+    vm._update(vm._render(), hydrating)
+  }
+  ```
+  这就是当修改组件相关的响应式数据的时，会触发组件重新渲染的原因。
+
+#### 总结
+
+派发更新实际上就是当数据发生变化时，触发setter逻辑，把在依赖收集过程中订阅的所有观察者（watcher），都触发它们的update过程，这个过程利用了队列做了优化，在nextTick后执行所有watcher的run，最后执行它们的回调函数。
+
 ### Virtual DOM（虚拟DOM）
 
 Vue通过vm._render方法（最终是通过执行createElement方法返回vnode）把实例渲染成一个虚拟Node。
@@ -827,5 +1091,8 @@ export function createElement (
 
 ![示例](./imgs/img6.png)
 
+### 原理图
 
-> 这个笔记是参考此[文档](https://ustbhuangyi.github.io/vue-analysis/v2/prepare/)整理记录搬运，原文档非常赞。感谢作者🙏非常赞。
+![原理图](./imgs/img2.png)
+
+> 这个笔记是参考此[文档](https://ustbhuangyi.github.io/vue-analysis/v2/prepare/)整理记录搬运，原文档非常赞。我是怕丢了重新整理份保存，感谢作者🙏非常赞。
