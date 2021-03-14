@@ -10,6 +10,6 @@
   * [rem转换原理](css/note7.md)
 
 * Vue
-  * [Vue实现双向绑定的原理](vue/note8.md)
+  * [Vue如何渲染成最终DOM](vue/note1.md)
+  * [Vue响应式原理](vue/note8.md)
   * [Vue响应式原理中Object.defineProperty有什么缺陷？为什么Vue3.0采用Proxy?](vue/note9.md)
-  * [VNode](vue/note1.md)
