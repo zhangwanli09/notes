@@ -1145,4 +1145,6 @@ export default class Watcher {
 
 ![原理图](../imgs/img2.png)
 
-> 这个笔记是参考此[文档](https://ustbhuangyi.github.io/vue-analysis/v2/prepare/)整理记录搬运，原文档非常赞。我是怕丢了重新整理份保存，感谢作者🙏非常赞。
+> 参考资料：
+>
+> https://ustbhuangyi.github.io/vue-analysis/v2/reactive/

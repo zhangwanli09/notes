@@ -493,4 +493,6 @@ _update的核心是调用`vm.__patch__`方法，在不同平台（web、weex）�
 
 ![示例](../imgs/img6.png)
 
-> 参考原[文档](https://ustbhuangyi.github.io/vue-analysis/v2/data-driven/)。
+> 参考资料：
+>
+> https://ustbhuangyi.github.io/vue-analysis/v2/data-driven/
