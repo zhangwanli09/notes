@@ -9,6 +9,9 @@
   * [比较opacity: 0，visibility: hidden，display: none的优劣及适用场景](css/note4.md)
   * [rem转换原理](css/note7.md)
 
+* js
+  * [js运行机制（Event Loop）](js/note1.md)
+
 * Vue
   * [Vue如何渲染成最终DOM](vue/note1.md)
   * [Vue响应式原理](vue/note8.md)
