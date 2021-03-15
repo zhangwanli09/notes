@@ -487,7 +487,7 @@ Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
 }
 ```
 
-_update的核心方法是`patch`方法。（内部涉及到很多方法，最终大概就是通过调用原生DOM的API进行DOM创建）。
+_update的核心是调用`vm.__patch__`方法，在不同平台（web、weex）有不同的逻辑，对于在浏览器端渲染中，它指向`patch`方法。（内部涉及到很多方法，最终大概就是通过调用原生DOM的API进行DOM创建）。
 
 从初始化Vue到最终渲染的整个过程，参考下图：
 
