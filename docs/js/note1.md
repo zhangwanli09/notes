@@ -169,6 +169,66 @@ console.log(2)
 
 ### 练手题
 
+```javascript
+function test() {
+  console.log(1)
+  // timer1
+  setTimeout(function () {
+    console.log(2)
+  }, 1000)
+}
+
+test()
+
+// timer2
+setTimeout(function () {
+  console.log(3)
+}, 0)
+
+new Promise(function (resolve) {
+  console.log(4)
+  // timer3
+  setTimeout(function () {
+    console.log(5)
+  }, 100)
+  resolve()
+}).then(function () {
+  // timer4
+  setTimeout(function () {
+    console.log(6)
+  }, 0)
+  console.log(7)
+})
+
+console.log(8)
+
+// 打印 1 4 8 7 3 6 5 2
+```
+
+1. 执行test()，test方法为同步任务，直接执行console.log(1)打印`1`。
+2. test方法中setTimeout为异步宏任务，回调记做timer1放入宏任务队列。
+3. 接着执行，test方法下面的setTimeout为异步宏任务，回调记做timer2放入宏任务队列.
+4. 接着执行，new Promise是同步任务，直接执行，打印`4`.
+5. new Promise里面的setTimeout是异步宏任务，回调记做timer3放入宏任务队列.
+6. Promise.then是微任务，放到微任务队列。
+7. console.log(8)是同步任务，直接执行，打印`8`。
+8. 主线程任务执行完毕，检查微任务队列中有Promise.then。
+9. 开始执行微任务，发现有setTimeout是异步宏任务，回调记做timer4放入宏任务队列。
+10. 微任务队列中的console.log(7)是同步任务，直接执行，打印`7`。
+11. 微任务执行完毕，第一次`循环结束`。
+12. 检查宏任务队列，里面有timer1、timer2、timer3、timer4，四个定时器宏任务，按照定时器延迟时间得到执行顺序，Event Queue：timer2、timer4、timer3、timer1，依次拿出放入执行栈末尾执行（浏览器Event Loop的Macrotask queue，就是宏任务队列在每次循环中只会读取一个任务）。
+13. 执行timer2，console.log(3)为同步任务，直接执行，打印`3`。
+14. 检查没有微任务，第二次Event Loop结束。
+15. 执行timer4，console.log(6)为同步任务，直接执行，打印`6`。
+16. 检查没有微任务，第三次Event Loop结束。
+17. 执行timer3，console.log(5)为同步任务，直接执行，打印`5`。
+18. 检查没有微任务，第四次Event Loop结束。
+19. 执行timer1，console.log(2)为同步任务，直接执行，打印`2`。
+20. 检查没有微任务，也没有宏任务，第五次Event Loop结束。
+
+最终打印结果：1 4 8 7 3 6 5 2
+
+
 ### Node.js中的运行机制
 
 
