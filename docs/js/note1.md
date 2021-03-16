@@ -48,6 +48,22 @@ js分为`同步任务`和`异步任务`。
 
 ![Event Loop](../imgs/img3.png ':size=500')
 
+### 定时器（timer）
+
+任务队列除了可以放置异步任务的事件，还可以放置定时事件（`setTimeout`，`setInterval`）。
+
+如果将`setTimeout`的第二个参数设为`0`，表示当前代码`执行栈清空`后，立即执行（0毫秒间隔）指定的回调函数。
+
+```javascript
+console.log(1)
+setTimeout(() => { console.log(2) }, 0)
+console.log(3)
+
+// 打印 1 3 2
+```
+
+`setTimeout(fn, 0)`的含义是指定某个任务在主线程最早可得的空闲时间执行（尽可能早的执行）。它在任务队列尾部添加一个事件，要等同步任务和任务队列现有的事件都处理完再执行，所有不能保证一定会在参数设置的时间执行。
+
 ### 宏任务（macro task）、微任务（micro task）
 
 规范中规定`task`分为两大类，分别是`macro task`和`micro task`。
