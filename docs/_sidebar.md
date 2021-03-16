@@ -12,6 +12,9 @@
 * js
   * [js运行机制（Event Loop）](js/note1.md)
 
+* http
+  * [HTTP状态码](http/note1.md)
+
 * Vue
   * [Vue如何渲染成最终DOM](vue/note1.md)
   * [Vue响应式原理](vue/note8.md)

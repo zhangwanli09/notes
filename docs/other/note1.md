@@ -66,3 +66,10 @@
 4. 合成。
     1. 当文档的各个部分以不同层绘制，相互重叠时，必须进行合成，确保以正确的顺序绘制到屏幕。
     2. 页面加载中发生回流也会触发重绘和重新合成。
+
+
+> 参考：
+>
+> [MDN](https://developer.mozilla.org/zh-CN/docs/Web/Performance/How_browsers_work)
+>
+> [浏览器的工作原理](https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/)
