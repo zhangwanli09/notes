@@ -138,4 +138,4 @@ Object.defineProperty和Proxy区别
 
 Proxy对比Object.defineProperty优势
 1. Proxy的handler参数有13种拦截方法，比Object.defineProperty丰富。
-2. Proxy是新标准，性能优于Object.defineProperty。
+2. Proxy是新标准。
