@@ -215,7 +215,7 @@ console.log(8)
 8. 主线程任务执行完毕，检查微任务队列中有Promise.then。
 9. 开始执行微任务，发现有setTimeout是异步宏任务，回调记做timer4放入宏任务队列。
 10. 微任务队列中的console.log(7)是同步任务，直接执行，打印`7`。
-11. 微任务执行完毕，第一次`循环结束`。
+11. 微任务执行完毕，第一次循环结束。
 12. 检查宏任务队列，里面有timer1、timer2、timer3、timer4，四个定时器宏任务，按照定时器延迟时间得到执行顺序，Event Queue：timer2、timer4、timer3、timer1，依次拿出放入执行栈末尾执行（浏览器Event Loop的Macrotask queue，就是宏任务队列在每次循环中只会读取一个任务）。
 13. 执行timer2，console.log(3)为同步任务，直接执行，打印`3`。
 14. 检查没有微任务，第二次Event Loop结束。
