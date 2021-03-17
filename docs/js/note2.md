@@ -1,6 +1,6 @@
 # call、apply、bind
 
-call() 方法的`作用`和 apply() 方法`类似`，区别就是`call()`方法接受的是`参数列表`，而`apply()`方法接受的是一个`参数数组`。
+call() 方法的`作用`和 apply() 方法`类似`，区别就是`call()`方法接受的是`参数列表`，而`apply()`方法接受的是一个`参数数组`。`bind()`函数会创建一个新的`绑定函数`。
 
 ### call
 
@@ -87,4 +87,54 @@ const max = Math.max.apply(null, numbers)
 console.log(max) // 7
 const min = Math.min.apply(null, numbers);
 console.log(min) // 2
+```
+
+### bind
+
+`bind()`方法创建一个`新的函数`，在 bind() 被调用时，这个新函数的 this 被指定为 bind() 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)。
+
+语法：
+
+```javascript
+// thisArg 调用绑定函数时作为 this 参数传递给目标函数的值。 如果使用new运算符构造绑定函数，则忽略该值。
+// 如果 bind 函数的参数列表为空，或者thisArg是null或undefined，执行作用域的 this 将被视为新函数的 thisArg。
+function.bind(thisArg[, arg1[, arg2[, ...]]])
+```
+
+返回值：返回一个原函数的`拷贝`，并拥有指定的 this 值和初始参数。
+
+bind() 函数会创建一个新的`绑定函数`（bound function，BF）。
+
+示例：
+
+```javascript
+// 创建绑定函数
+this.a = 2 // 在浏览器中，this 指向全局的 "window" 对象
+
+const obj = {
+  a: 1,
+  getA: function () {
+    return this.a
+  }
+}
+
+obj.getA() // 返回 1
+
+const fn = obj.getA
+fn() // 返回 2，因为函数是在全局作用域中调用的
+
+const fn2 = fn.bind(obj)
+fn2() // 返回 1，创建一个新函数，把 'this' 绑定到 obj 对象
+
+// ---
+
+// 使一个函数拥有预设的初始参数。当绑定函数被调用时，这些参数会被插入到目标函数的参数列表的开始位置，传递给绑定函数的参数会跟在它们后面。
+function sum (a, b) {
+  return a + b
+}
+
+let sumBind = sum.bind(null, 1)
+
+sumBind(2) // 1 + 2 = 3
+sumBind(5, 7) // 1 + 5 = 6，第二个参数7被忽略
 ```
