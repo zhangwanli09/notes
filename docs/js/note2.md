@@ -55,3 +55,35 @@ display.call() // 打印 1。严格模式 'use strict' 打印 undefined。
 
 ### apply
 
+`apply()`方法调用一个具有给定`this`值的函数，以及以一个`数组`（或类数组对象）的形式提供的参数。参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)。
+
+语法：
+
+```javascript
+// thisArg 必选，在 func 函数运行时使用的 this 值。
+// 非严格模式下，指定为 null 或 undefined 时会自动替换为指向全局对象，原始值会被包装。
+func.apply(thisArg, [argsArray])
+```
+
+返回值：调用有指定this值和参数的函数的结果。
+
+在调用函数时，可以为其指定一个`this`对象。 this 指当前对象，也就是正在调用这个函数的对象。作用和`call()`类似，只是参数有区别。
+
+示例：
+
+```javascript
+// 用 apply 将数组各项添加到另一个数组
+const arr = [1, 2]
+const arr2 = [3, 4]
+
+arr.push.apply(arr, arr2)
+console.log(arr) // [1, 2, 3, 4]
+
+// 对于一些需要写循环以便历数组各项的需求，可以用apply完成以避免循环。
+// 用 Math.max/Math.min 求数组中的最大/小值。
+const numbers = [5, 6, 2, 3, 7]
+const max = Math.max.apply(null, numbers)
+console.log(max) // 7
+const min = Math.min.apply(null, numbers);
+console.log(min) // 2
+```
