@@ -1,10 +1,10 @@
 # call、apply、bind
 
+call() 方法的`作用`和 apply() 方法`类似`，区别就是`call()`方法接受的是`参数列表`，而`apply()`方法接受的是一个`参数数组`。
+
 ### call
 
 `call()`方法使用一个指定的`this`值和单独给出的一个或多个参数来调用一个函数。参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/call)。
-
-语法和作用与`apply()`类似，只有一个区别，就是 call() 方法接受的是一个`参数列表`，而 apply() 方法接受的是一个包含`多个参数的数组`。
 
 语法：
 
@@ -52,3 +52,6 @@ function display () {
 
 display.call() // 打印 1。严格模式 'use strict' 打印 undefined。
 ```
+
+### apply
+
