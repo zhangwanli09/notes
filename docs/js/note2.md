@@ -9,6 +9,7 @@ call() 方法的`作用`和 apply() 方法`类似`，区别就是`call()`方法�
 语法：
 
 ```javascript
+// thisArg 可选，非严格模式下，指定为 null 或 undefined 时会自动替换为指向全局对象，原始值会被包装。
 function.call(thisArg, arg1, arg2, ...)
 ```
 
