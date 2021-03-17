@@ -11,6 +11,7 @@
 
 * js
   * [js运行机制（Event Loop）](js/note1.md)
+  * [call、apply、bind](js/note2.md)
 
 * http
   * [HTTP状态码](http/note1.md)
