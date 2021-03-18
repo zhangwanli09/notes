@@ -13,6 +13,7 @@
   * [js运行机制（Event Loop）](js/note1.md)
   * [call、apply、bind](js/note2.md)
   * [实现一个 new](js/note3.md)
+  * [如何实现数组随机排序](js/note4.md)
 
 * http
   * [HTTP状态码](http/note1.md)
