@@ -30,3 +30,9 @@ function random3(arr) {
   return arr
 }
 ```
+
+洗牌原理，该算法需要遍历整个数组，当遍历到第 i（i 为数组元素的索引）个元素时，从 0 到 i 随机挑选出一个数字，记为 index，然后对索引为 i 和 index 的数组元素进行互换，直至遍历结束。如此下来，也即完成了数组的随机排序。
+
+> [sort()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
+>
+> [Math.random()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Math/random)
