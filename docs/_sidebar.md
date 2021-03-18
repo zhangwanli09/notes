@@ -27,3 +27,6 @@
 * Git
   * [修改分支名](git/note1.md)
   * [rebase 合并分支](git/note2.md)
+
+* 算法
+  * [深度优先遍历和广度优先遍历](algorithm/note1.md)
