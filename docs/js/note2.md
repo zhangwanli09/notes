@@ -45,13 +45,13 @@ fn.call(obj) // 打印 1
 
 
 // 不指定第一个参数，在严格模式下，this 的值将会是 undefined。
-const sData = 1
+var sData = 1
 
 function display () {
   console.log(this.sData)
 }
 
-display.call() // 打印 1。严格模式 'use strict' 打印 undefined。
+display.call() // 打印 1。严格模式 'use strict' 下，Cannot read property 'sData' of undefined。
 ```
 
 ### apply
