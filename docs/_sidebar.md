@@ -22,5 +22,6 @@
   * [nextTick](vue/note2.md)
   * [Vue响应式原理中Object.defineProperty有什么缺陷？为什么Vue3.0采用Proxy?](vue/note9.md)
 
-* git
+* Git
   * [修改分支名](git/note1.md)
+  * [rebase 合并分支](git/note2.md)
