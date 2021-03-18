@@ -2,6 +2,8 @@
 
 call() 方法的`作用`和 apply() 方法`类似`，区别就是`call()`方法接受的是`参数列表`，而`apply()`方法接受的是一个`参数数组`。`bind()`函数会创建一个新的`绑定函数`。
 
+作用都是`改变`函数`执行时`的上下文（改变函数运行时的`this指向`）。
+
 ### call
 
 `call()`方法使用一个指定的`this`值和单独给出的一个或多个参数来调用一个函数。参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/call)。
