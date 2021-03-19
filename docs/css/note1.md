@@ -1,6 +1,8 @@
 # 圣杯，双飞翼布局
 
-两者都是三栏布局的优化解决方案。
+两者都是`三栏布局`的优化解决方案。不过有点过度优化了，现在大多使用`flex`布局。
+
+![示例](../imgs/img8.png ':size=500')
 
 常规情况下，布局从上到下，从左到右。如下：
 
@@ -41,7 +43,60 @@ header, footer {height: 50px; background-color: #999;}
 </style>
 ```
 
-特殊情况下有问题，当窗口无限变窄，布局会混乱。当 main 部分的宽小于 left 部分时就会发生布局混乱。
+特殊情况下`有问题`，当窗口无限变窄，布局会混乱。当 main 部分的宽小于 left 部分时就会发生布局混乱。
 
 ### 双飞翼
 
+淘宝针对圣杯的缺点做了`优化`。
+
+```html
+<header>header</header>
+<section class="wrapper">
+  <section class="col main">
+    <section class="main-wrap">main</section>
+  </section>
+  <aside class="col left">left</aside>
+  <aside class="col right">right</aside>
+</section>
+<footer>footer</footer>
+
+<style>
+header, footer {height: 50px; background-color: #999;}
+.wrapper {padding: 0; overflow: hidden;}
+.col {float: left;}
+.main {width: 100%; background-color: yellow;}
+.main-wrap {margin: 0 100px 0; height: 200px;}
+.left {width: 100px; height: 200px; margin-left: -100%; background-color: red;}
+.right {width: 100px; height: 200px; margin-left: -100px; background-color: blue;}
+</style>
+```
+
+同样使用了`float`和 负值`margin`，不同的是，并没有使用 relative 相对定位，而是增加了 dom 结构，增加了一个层级。解决了圣杯布局的缺陷。
+
+### 绝对定位
+
+虽然绝对定位也可以实现三栏布局，但是`高度不可控`，两侧高度无法支撑总高度。
+
+```html
+<header>header</header>
+<section class="wrapper">
+  <section class="col main">main</section>
+  <aside class="col left">left</aside>
+  <aside class="col right">right</aside>
+</section>
+<footer>footer</footer>
+
+<style>
+header, footer {height: 50px; background-color: #999;}
+.wrapper {position: relative;}
+.main {height: 200px; margin: 0 100px; background-color: yellow;}
+.left, .right {width: 100px; height: 200px; position: absolute; top: 0;}
+.left {left: 0; background-color: red;}
+.right {right: 0; background-color: blue;}
+```
+
+### 总结
+
+我还是选择`flex`。
+
+> 参考：https://juejin.cn/post/6844903510933258247
