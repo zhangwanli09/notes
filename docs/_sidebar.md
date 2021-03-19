@@ -26,8 +26,7 @@
   * [Vue响应式原理中Object.defineProperty有什么缺陷？为什么Vue3.0采用Proxy?](vue/note9.md)
 
 * Git
-  * [修改分支名](git/note1.md)
-  * [rebase 合并分支](git/note2.md)
+  * [常用命令](git/note1.md)
 
 * 算法
   * [深度优先遍历和广度优先遍历](algorithm/note1.md)
