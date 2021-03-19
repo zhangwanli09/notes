@@ -24,6 +24,7 @@
   * [Vue响应式原理](vue/note8.md)
   * [nextTick](vue/note2.md)
   * [Vue响应式原理中Object.defineProperty有什么缺陷？为什么Vue3.0采用Proxy?](vue/note9.md)
+  * [生命周期](vue/note3.md)
 
 * Git
   * [常用命令](git/note1.md)
