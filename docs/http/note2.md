@@ -45,7 +45,7 @@ Response headers（响应头）：
 11. Content-Length：响应消息体的长度，用8进制字节表示。示例：Content-Length: 348
 12. Content-Range：如果是响应部分消息，表示属于完整消息的哪个部分。Content-Range: bytes 21010-47021/47022
 13. Content-Type：当前内容的MIME类型。示例：Content-Type: text/html; charset=utf-8
-14. Date：此条消息被发送时的日期和时间。示例：Date: Sat, 20 Mar 2021 08:48:59 GMT
+14. Date：此条消息被发送时的日期和时间。
 15. `Location`：用于在进行重定向，或在创建了某个新资源时使用。
 16. Refresh：用于重定向，或者当一个新的资源被创建时。默认会在5秒后刷新重定向。
 17. `Server`：服务器的名称。示例：Server: nginx/1.6.3
