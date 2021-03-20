@@ -1,6 +1,6 @@
 # HTTP Headers
 
-HTTP 消息头允许客户端和服务器通过`request`和`response`传递附加信息。请求头名称`不区分`大小写。参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers)。
+HTTP 消息头允许客户端和服务器通过`request`和`response`传递附加信息。请求头名称`不区分`大小写。通过 HTTP 消息头，可以使服务器或客户端了解对方所使用的协议版本、内容类型、编码方式等。参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers)。
 
 消息头分为：
 
@@ -25,10 +25,11 @@ Request headers（请求头）：
 9. Content-Length：以8进制表示的请求体的长度。示例：Content-Length: 348
 10. Content-Type：请求体的MIME类型 （用于POST和PUT请求中）。示例：Content-Type: application/x-www-form-urlencoded
 11. Host：服务器的域名以及服务器所监听的端口号。如果所请求的端口是对应的服务的标准端口（80），则端口号可以省略。示例：Host: news.baidu.com
-12. `Origin`：发起一个针对跨域资源共享的请求（该请求要求服务器在响应中加入一个Access-Control-Allow-Origin的消息头，表示访问控制所允许的来源）
-13. Range：表示请求某个实体的一部分，字节偏移以0开始。示例：Range: bytes=500-999
-14. Referer：表示浏览器所访问的前一个页面，可以认为是之前访问页面的链接将浏览器带到了当前页面。
-15. `User-Agent`：浏览器的身份标识字符串。示例：User-Agent: Mozilla/5.0...
+12. `If-Modified-Since`：允许在对应的资源未被修改的情况下返回304未修改。
+13. `Origin`：发起一个针对跨域资源共享的请求（该请求要求服务器在响应中加入一个Access-Control-Allow-Origin的消息头，表示访问控制所允许的来源）
+14. Range：表示请求某个实体的一部分，字节偏移以0开始。示例：Range: bytes=500-999
+15. Referer：表示浏览器所访问的前一个页面，可以认为是之前访问页面的链接将浏览器带到了当前页面。
+16. `User-Agent`：浏览器的身份标识字符串。示例：User-Agent: Mozilla/5.0...
 
 Response headers（响应头）：
 
