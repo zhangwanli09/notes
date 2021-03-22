@@ -16,6 +16,7 @@
   * [实现一个 new](js/note3.md)
   * [如何实现数组随机排序](js/note4.md)
   * [柯里化（Currying）](js/note5.md)
+  * [如何理解必包](js/note6.md)
 
 * http
   * [HTTP 状态码](http/note1.md)
