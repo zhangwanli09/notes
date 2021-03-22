@@ -62,3 +62,25 @@ Cache-Control: must-revalidate
 
 ### 新鲜度
 
+理论上，当资源被缓存后，可以永久存储在缓存中。由于缓存空间有限，所以会定期将一些副本删除，这个过程叫`缓存驱逐`。
+
+当服务器上的资源更新了，缓存中对应的资源也应该被`更新`。由于HTTP是C/S模式的协议，服务器更新一个资源时，不能直接通知客户端更新缓存，所以双方必须为该资源约定一个`过期时间`，来判断缓存是`新鲜的`或`陈旧的`。
+
+驱逐算法将`旧`资源换成`新`的，注意，旧资源不会直接被清除或忽略。
+
+当发起一个请求时，缓存检索到已有一个对应的旧资源，则缓存会先将此请求附加一个`If-None-Match`头，然后发给目标服务器，来检查该缓存是否还是新的，若服务器返回了 `304` (Not Modified)（该响应不会有带有实体信息），则表示此缓存是`新的`，这样一来，可以节省一些带宽。若服务器通过`If-None-Match`或`If-Modified-Since`判断后发现`已过期`，那么会带有该资源的`实体内容`返回。
+
+缓存处理过程图示：
+
+![缓存处理过程](https://media.prod.mdn.mozit.cloud/attachments/2016/08/19/13771/2e3dc2278f2aaa83a695e1c1eca98fc0/HTTPStaleness.png ':size=600')
+
+如果请求头含有`Cache-control`（比如，Cache-control: max-age=N），会去`计算`缓存寿命。相应的缓存寿命就是`N`。如果不含该属性，则会查看是否包含 [Expires](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Expires) 属性，通过比较 Expires 的值和头里面 Date 属性的值来判断是否缓存还有效。如果 max-age 和 expires 属性都没有，会找头里的 `Last-Modified` 信息。如果有，缓存的寿命就等于头里面 Date 的值减去 Last-Modified 的值除以10。
+
+缓存`失效时间`计算公式：
+
+```
+expirationTime = responseTime + freshnessLifetime - currentAge
+```
+
+### 改进资源
+
