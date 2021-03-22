@@ -23,6 +23,7 @@
   * [HTTP Headers](http/note2.md)
   * [HTTP Cookie](http/note3.md)
   * [HTTP 缓存](http/note4.md)
+  * [跨域资源共享（CORS）](http/note5.md)
 
 * Vue
   * [Vue如何渲染成最终DOM](vue/note1.md)
