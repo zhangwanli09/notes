@@ -23,7 +23,7 @@ Request headers（请求头）：
 7. Connection：客户端（浏览器）想要优先使用的连接类型。示例：Connection: keep-alive
 8. `Cookie`：由之前服务器通过 Set-Cookie 设置的一个HTTP协议Cookie。示例：Cookie: $Version=1; Skin=new;
 9. Content-Length：以8进制表示的请求体的长度。示例：Content-Length: 348
-10. Content-Type：请求体的MIME类型 （用于POST和PUT请求中）。示例：Content-Type: application/x-www-form-urlencoded
+10. `Content-Type`：请求体的MIME类型 （用于POST和PUT请求中）。示例：Content-Type: application/x-www-form-urlencoded
 11. Host：服务器的域名以及服务器所监听的端口号。如果所请求的端口是对应的服务的标准端口（80），则端口号可以省略。示例：Host: news.baidu.com
 12. `If-Modified-Since`：允许在对应的资源未被修改的情况下返回304未修改。
 13. `Origin`：发起一个针对跨域资源共享的请求（该请求要求服务器在响应中加入一个Access-Control-Allow-Origin的消息头，表示访问控制所允许的来源）
@@ -45,7 +45,7 @@ Response headers（响应头）：
 10. Content-Language：响就内容所使用的语言。示例：Content-Language: zh-cn
 11. Content-Length：响应消息体的长度，用8进制字节表示。示例：Content-Length: 348
 12. Content-Range：如果是响应部分消息，表示属于完整消息的哪个部分。Content-Range: bytes 21010-47021/47022
-13. Content-Type：当前内容的MIME类型。示例：Content-Type: text/html; charset=utf-8
+13. `Content-Type`：当前内容的MIME类型。示例：Content-Type: text/html; charset=utf-8
 14. Date：此条消息被发送时的日期和时间。
 15. `Location`：用于在进行重定向，或在创建了某个新资源时使用。
 16. Refresh：用于重定向，或者当一个新的资源被创建时。默认会在5秒后刷新重定向。

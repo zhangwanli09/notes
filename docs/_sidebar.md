@@ -19,6 +19,7 @@
   * [如何理解必包](js/note6.md)
 
 * http
+  * [HTTP不同版本的特点](http/note6.md)
   * [HTTP 状态码](http/note1.md)
   * [HTTP Headers](http/note2.md)
   * [HTTP Cookie](http/note3.md)
