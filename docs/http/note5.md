@@ -12,7 +12,7 @@ Access-Control-Allow-Origin: <origin> | *
 
 [Access-Control-Allow-Origin](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Origin) 指定了该响应的资源是否被允许与给定的`origin`共享。其中，origin 参数的值指定了允许访问该资源的外域 URI。对于`不需要`携带身份`凭证`的请求，服务器可以指定该字段的值为`通配符`，表示允许来自所有域的请求。对于附带身份凭证（Cookie）的请求，服务器不得设置该字段的值为`*`。
 
-如果服务端指定了具体的域名而非`*`，那么响应首部中的`Vary`字段的值必须包含`Origin`。这将告诉客户端：服务器对不同的源站返回不同的内容。
+如果服务端指定了`具体`的域名而非`*`，那么响应首部中的`Vary`字段的值必须包含`Origin`。这将告诉客户端：服务器对不同的源站返回不同的内容。
 
 ```
 Access-Control-Allow-Origin: https://developer.mozilla.org
