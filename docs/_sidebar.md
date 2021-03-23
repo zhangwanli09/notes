@@ -18,13 +18,14 @@
   * [柯里化（Currying）](js/note5.md)
   * [如何理解必包](js/note6.md)
 
-* http
+* HTTP
   * [HTTP不同版本的特点](http/note6.md)
   * [HTTP 状态码](http/note1.md)
   * [HTTP Headers](http/note2.md)
   * [HTTP Cookie](http/note3.md)
   * [HTTP 缓存](http/note4.md)
   * [跨域资源共享（CORS）](http/note5.md)
+  * [HTTP/2 的多路复用](http/note7.md)
 
 * Vue
   * [Vue如何渲染成最终DOM](vue/note1.md)
