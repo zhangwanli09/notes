@@ -63,4 +63,3 @@ HTTPS 采用`共享密钥加密`（对称加密）和`公开密钥加密`（非�
 ![混合加密机制](https://www.ituring.com.cn/figures/2014/PIC%20HTTP/11.d07z.017.png ':size=600')
 
 > 参考《图解HTTP》[第七章](https://www.ituring.com.cn/book/miniarticle/74663)
-
