@@ -3,6 +3,7 @@
   * [性能优化](other/note2.md)
   * [移动端视口配置](other/note5.md)
   * [如何实现浏览器多个页签之间通讯](other/note6.md)
+  * [什么是 CDN 服务](other/note3.md)
 
 * CSS
   * [对BFC规范的理解](css/note3.md)
