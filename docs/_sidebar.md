@@ -26,6 +26,7 @@
   * [HTTP 缓存](http/note4.md)
   * [跨域资源共享（CORS）](http/note5.md)
   * [HTTP/2 的多路复用](http/note7.md)
+  * [HTTP 长连接](http/note8.md)
 
 * Vue
   * [Vue如何渲染成最终DOM](vue/note1.md)
