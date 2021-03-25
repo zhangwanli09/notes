@@ -19,6 +19,7 @@
   * [如何实现数组随机排序](js/note4.md)
   * [柯里化（Currying）](js/note5.md)
   * [如何理解必包](js/note6.md)
+  * [Promise 实现](js/note7.md)
 
 * HTTP
   * [HTTP不同版本的特点](http/note6.md)
