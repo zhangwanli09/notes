@@ -1,6 +1,7 @@
 * 其他
   * [浏览器工作原理](other/note1.md)
   * [性能优化](other/note2.md)
+  * [安全相关](other/note4.md)
   * [移动端视口配置](other/note5.md)
   * [如何实现浏览器多个页签之间通讯](other/note6.md)
   * [什么是 CDN 服务](other/note3.md)
