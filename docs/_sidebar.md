@@ -31,6 +31,7 @@
   * [TCP 连接](http/note9.md)
   * [HTTPS 加密过程](http/note10.md)
   * [HTTPS 中间人攻击过程](http/note11.md)
+  * [如何实现 token 加密](http/note12.md)
 
 * Vue
   * [Vue如何渲染成最终DOM](vue/note1.md)
