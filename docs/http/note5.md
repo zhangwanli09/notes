@@ -29,4 +29,16 @@ Origin: <origin>
 
 注意，在所有访问控制请求（Access control request）中，Origin 首部字段总是被发送。
 
+### CORS 头
+
+1. [Access-Control-Allow-Origin](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Origin) 指示请求的资源能共享给哪些域。
+2. [Access-Control-Allow-Credentials](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials) 指示当请求的凭证标记为 true 时，是否响应该请求。
+3. [Access-Control-Allow-Headers](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Headers) 用在对预请求的响应中，指示实际的请求中可以使用哪些 HTTP 头。
+4. [Access-Control-Allow-Methods](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Methods) 指定对预请求的响应中，哪些 HTTP 方法允许访问请求的资源。
+5. [Access-Control-Expose-Headers](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Expose-Headers) 指示哪些 HTTP 头的名称能在响应中列出。
+6. [Access-Control-Max-Age](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Max-Age) 指示预请求的结果能被缓存多久。
+7. [Access-Control-Request-Headers](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Request-Headers) 用于发起一个预请求，告知服务器正式请求会使用那些 HTTP 头。
+8. [Access-Control-Request-Method](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Request-Method) 用于发起一个预请求，告知服务器正式请求会使用哪一种 HTTP 请求方法。
+9. [Origin](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Origin) 指示获取资源的请求是从什么域发起的。
+
 > [MDN 跨域资源共享（CORS）](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS)
