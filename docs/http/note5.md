@@ -45,4 +45,16 @@ Origin: <origin>
 
 ![示例](../imgs/img9.jpeg ':size=600')
 
+### JSONP
+
+还有个古老的方式实现跨域`JSONP`（JSON with Padding）。原理就是利用`<script>`标签没有跨域限制的`漏洞`来达到与第三方通讯的目的。现在几乎很少见。[JSONP](https://segmentfault.com/a/1190000007935557)
+
+用 js 创建`<script>`标签，src 指向 api 地址，并提供`回调函数`来接收数据（函数名可约定，或通过地址参数传递）。服务器响应 json 数据。浏览器调用 callback 函数，参数就是服务器返回的 json，回调里处理逻辑。
+
+```
+<script src="//www.example.net/api?param1=1&param2=2"></script>
+
+callback({ a: 1, b: 2 })
+```
+
 > [MDN 跨域资源共享（CORS）](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS)
