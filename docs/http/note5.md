@@ -41,4 +41,8 @@ Origin: <origin>
 8. [Access-Control-Request-Method](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Request-Method) 用于发起一个预请求，告知服务器正式请求会使用哪一种 HTTP 请求方法。
 9. [Origin](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Origin) 指示获取资源的请求是从什么域发起的。
 
+示例：
+
+![示例](../imgs/img9.jpeg ':size=600')
+
 > [MDN 跨域资源共享（CORS）](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS)
