@@ -54,4 +54,4 @@ Response headers（响应头）：
 19. `Status`：通用网关接口的响应头字段，用来说明当前HTTP连接的响应状态。示例：Status: 200 OK
 20. WWW-Authenticate：表示在请求获取这个实体时应当使用的认证模式。示例：WWW-Authenticate: Basic
 
-> 参考：https://itbilu.com/other/relate/EJ3fKUwUx.html
+> [参考](https://itbilu.com/other/relate/EJ3fKUwUx.html)

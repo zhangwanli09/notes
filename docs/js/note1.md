@@ -278,8 +278,6 @@ nodejs的宏任务分好几种类型，而这好几种又有不同的任务队�
 
 在node环境下，`process.nextTick`的优先级高于Promise，可以简单理解为在宏任务结束后会先执行微任务队列中的nextTickQueue部分，然后才会执行微任务中的Promise部分。
 
-> 参考资料：
+> [参考1](https://juejin.cn/post/6844904050543034376#heading-22)
 >
-> https://juejin.cn/post/6844904050543034376#heading-22
->
-> https://www.ruanyifeng.com/blog/2014/10/event-loop.html
+> [参考2](https://www.ruanyifeng.com/blog/2014/10/event-loop.html)

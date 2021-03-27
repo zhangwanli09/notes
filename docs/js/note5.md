@@ -36,4 +36,4 @@ curryingAdd(2, 6)(1) // 9
 >
 > [arguments](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/arguments)
 >
-> https://juejin.cn/post/6844903603266650125
+> [参考](https://juejin.cn/post/6844903603266650125)

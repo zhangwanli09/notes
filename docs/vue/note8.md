@@ -1145,6 +1145,4 @@ export default class Watcher {
 
 ![原理图](../imgs/img2.png ':size=600')
 
-> 参考资料：
->
-> https://ustbhuangyi.github.io/vue-analysis/v2/reactive/
+> [参考](https://ustbhuangyi.github.io/vue-analysis/v2/reactive/)

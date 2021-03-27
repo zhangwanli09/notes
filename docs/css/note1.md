@@ -99,4 +99,4 @@ header, footer {height: 50px; background-color: #999;}
 
 我还是选择`flex`。
 
-> 参考：https://juejin.cn/post/6844903510933258247
+> [参考](https://juejin.cn/post/6844903510933258247)
