@@ -5,6 +5,7 @@
   * [移动端视口配置](other/note5.md)
   * [浏览器多个页签之间通讯](other/note6.md)
   * [什么是 CDN 服务](other/note3.md)
+  * [MVC、MVP、MVVM](other/note7.md)
 
 * CSS
   * [BFC 块格式化上下文](css/note3.md)
@@ -38,7 +39,6 @@
   * [如何实现 token 加密](http/note12.md)
 
 * Vue
-  * [MVVM](vue/note5.md)
   * [Vue如何渲染成最终DOM](vue/note1.md)
   * [Vue响应式原理](vue/note8.md)
   * [nextTick](vue/note2.md)
