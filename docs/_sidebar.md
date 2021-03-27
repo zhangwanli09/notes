@@ -5,7 +5,7 @@
   * [移动端视口配置](other/note5.md)
   * [浏览器多个页签之间通讯](other/note6.md)
   * [什么是 CDN 服务](other/note3.md)
-  * [MVC、MVP、MVVM](other/note7.md)
+  * [MVC，MVP，MVVM](other/note7.md)
 
 * CSS
   * [BFC 块格式化上下文](css/note3.md)
