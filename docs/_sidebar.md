@@ -37,6 +37,7 @@
   * [如何实现 token 加密](http/note12.md)
 
 * Vue
+  * [MVVM](vue/note5.md)
   * [Vue如何渲染成最终DOM](vue/note1.md)
   * [Vue响应式原理](vue/note8.md)
   * [nextTick](vue/note2.md)
