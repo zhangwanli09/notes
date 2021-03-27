@@ -1,4 +1,4 @@
-# Vue响应式原理中Object.defineProperty有什么缺陷？为什么Vue3.0采用Proxy?
+# 为什么Vue3.0采用Proxy
 
 Object.defineProperty和Proxy，都可以用来做数据劫持，典型应用如数据的双向绑定。
 

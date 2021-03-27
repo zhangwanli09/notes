@@ -3,7 +3,7 @@
   * [性能优化](other/note2.md)
   * [安全相关](other/note4.md)
   * [移动端视口配置](other/note5.md)
-  * [如何实现浏览器多个页签之间通讯](other/note6.md)
+  * [浏览器多个页签之间通讯](other/note6.md)
   * [什么是 CDN 服务](other/note3.md)
 
 * CSS
@@ -16,7 +16,7 @@
   * [js运行机制（Event Loop）](js/note1.md)
   * [call、apply、bind](js/note2.md)
   * [实现一个 new](js/note3.md)
-  * [如何实现数组随机排序](js/note4.md)
+  * [数组随机排序](js/note4.md)
   * [柯里化（Currying）](js/note5.md)
   * [如何理解闭包](js/note6.md)
   * [Promise 实现](js/note7.md)
@@ -40,7 +40,7 @@
   * [Vue如何渲染成最终DOM](vue/note1.md)
   * [Vue响应式原理](vue/note8.md)
   * [nextTick](vue/note2.md)
-  * [Vue响应式原理中Object.defineProperty有什么缺陷？为什么Vue3.0采用Proxy?](vue/note9.md)
+  * [为什么Vue3.0采用Proxy](vue/note9.md)
   * [生命周期](vue/note3.md)
   * [为什么v-for中的key不推荐使用随机数或者index](vue/note4.md)
 
