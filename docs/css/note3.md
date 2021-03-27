@@ -1,4 +1,4 @@
-# 对BFC规范的理解
+# BFC 块格式化上下文
 
 块格式化上下文（BFC）Block Formatting Context是web页面的可视css渲染的一部分，是块盒子的布局过程发生的区域，也是浮动元素与其他元素交互的区域。
 
