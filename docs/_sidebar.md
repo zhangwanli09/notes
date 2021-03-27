@@ -44,6 +44,7 @@
   * [为什么Vue3.0采用Proxy](vue/note9.md)
   * [生命周期](vue/note3.md)
   * [为什么v-for中的key不推荐使用随机数或者index](vue/note4.md)
+  * [Vuex](vue/note6.md)
 
 * Git
   * [常用命令](git/note1.md)
