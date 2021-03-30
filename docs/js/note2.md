@@ -56,6 +56,24 @@ function display () {
 display.call() // 打印 1。严格模式 'use strict' 下，Cannot read property 'sData' of undefined。
 ```
 
+#### 实现思路
+
+```javascript
+Function.prototype.myCall = function (context) {
+  // 第一个参数为 this 指向值，如果没有则指向 window
+  context = context || window
+  // 将调用 myCall 函数的对象添加到 context 的属性中。
+  context.fn = this
+  // 将后面传入的参数转为数组，取除第一个 this 指向剩下的所有参数
+  const args = [...arguments].slice(1)
+  // 执行该函数，并将参数传入
+  const result = context.fn(...args)
+  // 删除该属性
+  delete context.fn
+  return result
+}
+```
+
 ### apply
 
 `apply()`方法调用一个具有给定`this`值的函数，以及以一个`数组`（或类数组对象）的形式提供的参数。参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)。
