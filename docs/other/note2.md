@@ -49,3 +49,6 @@
     1. html标签（video，canvas）。
     2. css属性（opacity，transform，transition）。
     3. 将内容提升到GPU层（而不是CPU上的主线程）虽然可以提高绘制性能，但是是以内存管理为代价，因此不能过度使用。
+
+
+> [参考](https://mp.weixin.qq.com/s/ezOX9lcLEOuMjlRIrT_ARw)

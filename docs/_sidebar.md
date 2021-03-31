@@ -24,6 +24,7 @@
   * [Promise 实现](js/note7.md)
   * [防抖，节流](js/note8.md)
   * [async/await 如何通过同步的方式实现异步](js/note9.md)
+  * [类继承和原型继承的区别](js/note10.md)
 
 * HTTP
   * [HTTP不同版本的特点](http/note6.md)
