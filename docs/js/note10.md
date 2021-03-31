@@ -4,7 +4,7 @@
 2. `this`的创造`顺序`不同。
 3. 子类实例的构建，基于父类实例，只有`super`方法才能调用父类实例。
 
-子类必须在`constructor`方法中调用`super`方法，否则新建实例时会报错。这是因为子类自己的`this`对象，必须先通过父类的构造函数完成塑造，得到与父类同样的实例属性和方法，然后再对其进行加工，加上子类自己的实例属性和方法。如果不调用`super`方法，子类就得不到`this`对象。
+子类必须在 [constructor](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes/constructor) 方法中调用 [super](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/super) 方法，否则新建实例时会报错。这是因为子类自己的`this`对象，必须先通过父类的构造函数完成塑造，得到与父类同样的实例属性和方法，然后再对其进行加工，加上子类自己的实例属性和方法。如果不调用`super`方法，子类就得不到`this`对象。
 
 ```javascript
 // B 继承了父类 A，但是它的构造函数没有调用 super 方法，导致新建实例时报错。
@@ -16,6 +16,22 @@ class B extends A {
 
 let c = new B() // ReferenceError 报错
 ```
+
+`原型继承`实质是先创造子类的实例对象 this，然后再将父类的方法添加到 this 上面（Parent.apply(this)）。`类继承`机制完全不同，实质是先将父类实例对象的属性和方法，加到 this 上面（所以必须先调用 super 方法），然后再用子类的构造函数修改 this。
+
+如果子类没有定义`constructor`方法，这个方法会被默认添加。也就是说，不管有没有显式定义，任何一个子类都有`constructor`方法。
+
+```javascript
+class B extends A {}
+// 等同于
+class B extends A {
+  constructor (...args) {
+    super(...args)
+  }
+}
+```
+
+原型继承的继承链是由实实在在的对象构成的，而类继承系统是通过抽象的类定义来进行继承。在实际应用中，`原型继承`的一个最大特性就是`灵活`，因为继承链上的每一个对象、甚至继承链本身都是可以动态修改的。相比之下，`类继承`需要事先定义好所有的类和它们之间的`继承关系`，绝大部分类继承系统都不支持在运行时动态修改这些已经定义好的东西。
 
 [参考：ES6 入门](https://es6.ruanyifeng.com/#docs/class-extends)
 
