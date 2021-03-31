@@ -48,6 +48,7 @@
   * [生命周期](vue/note3.md)
   * [为什么v-for中的key不推荐使用随机数或者index](vue/note4.md)
   * [Vuex](vue/note6.md)
+  * [template 模板语法](vue/note5.md)
 
 * Git
   * [常用命令](git/note1.md)
