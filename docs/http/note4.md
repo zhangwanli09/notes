@@ -113,5 +113,16 @@ expirationTime = responseTime + freshnessLifetime - currentAge
 
 因为移动版和桌面的客户端的请求头中的`User-Agent`不同， 缓存服务器不会错误地把移动端的内容输出到桌面端到用户。
 
+### 强缓存、协商缓存
+
+浏览器缓存策略大致分为两种：`强缓存`和`协商缓存`
+
+1. 浏览器在加载资源时，根据请求头`Cache-control`和`Expires`（Cache-control 优先级更高）判断是否命中强缓存，如果是则直接从缓存读取资源，不会发送请求到服务器。
+2. 如果没有命中强缓存，则会发送请求到服务器，通过`Last-Modified`和`ETag`验证资源是否命中协商缓存，如果命中，服务器则响应请求，但不会返回资源数据，依然是从缓存中读取资源。
+3. 如果前两种都没命中，直接从服务器加载资源。
+
+`相同点`：如果命中，都是从缓存中加载资源，而不是从服务器。`不同点`：强缓存不发送请求到服务器，而协商缓存会发送请求。
+
+![缓存流程](https://user-images.githubusercontent.com/25027560/38223505-d8ab53da-371d-11e8-9263-79814b6971a5.png ':size=600')
 
 > [MDN HTTP 缓存](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching)
