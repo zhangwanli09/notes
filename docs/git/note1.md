@@ -40,3 +40,11 @@ git merge experiment
 ```git
 git branch | grep -v "master" | xargs git branch -D
 ```
+
+### 回滚远程提交记录
+
+```git
+git reset --hard <CommitID>
+
+git push -f -u origin <BranchName> 或 git push origin <BranchName> -f
+```
