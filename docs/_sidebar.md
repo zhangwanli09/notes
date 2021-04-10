@@ -42,6 +42,7 @@
 * React
   * [Hook](react/note1.md)
   * [Context](react/note2.md)
+  * [高阶组件（HOC）](react/note3.md)
 
 * Vue
   * [Vue如何渲染成最终DOM](vue/note1.md)
