@@ -60,5 +60,8 @@
 * Git
   * [常用命令](git/note1.md)
 
+* nginx
+  * [常用命令](nginx/note1.md)
+
 * 算法
   * [深度优先遍历和广度优先遍历](algorithm/note1.md)
