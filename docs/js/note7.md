@@ -73,3 +73,5 @@ MyPromise.race = function (promises) {
   })
 }
 ```
+
+> [参考](https://zhuanlan.zhihu.com/p/58428287)
