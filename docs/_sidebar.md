@@ -58,3 +58,4 @@
   * [作用域插槽](vue/note10.md)
   * [动态组件 & 异步组件](vue/note11.md)
   * [diff](vue/note12.md)
+  * [组件通信](vue/note13.md)
