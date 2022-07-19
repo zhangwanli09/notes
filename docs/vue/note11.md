@@ -21,4 +21,15 @@
 
 ### 异步组件
 
-只在需要的时候才加载。
+按需加载组件，以`函数方式`定义组件，这个函数会`异步解析`组件。Vue只有在这个组件需要被渲染的时候才会触发该工厂函数，且会把结果缓存起来供未来重渲染。
+
+```javascript
+new Vue({
+  // ...
+  components: {
+    'my-component': () => import('./my-async-component')
+  }
+})
+```
+
+> [动态组件 & 异步组件](https://cn.vuejs.org/v2/guide/components-dynamic-async.html)
