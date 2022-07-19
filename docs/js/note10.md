@@ -145,3 +145,4 @@ d.speak() // Mitzie makes a noise.  Mitzie barks.
 类不能继承常规对象（不可构造的）。如果要继承常规对象，可以改用 [Object.setPrototypeOf()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf)。
 
 > [MDN 类](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes)
+> [参考](https://mp.weixin.qq.com/s/qorENDz-0GetxYPlf_EozQ)
