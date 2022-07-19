@@ -56,3 +56,4 @@
   * [template 模板语法](vue/note5.md)
   * [history 与 hash 路由的区别](vue/note7.md)
   * [作用域插槽](vue/note10.md)
+  * [动态组件 & 异步组件](vue/note11.md)
