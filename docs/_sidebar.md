@@ -40,11 +40,6 @@
   * [HTTPS 中间人攻击过程](http/note11.md)
   * [如何实现 token 加密](http/note12.md)
 
-* React
-  * [Hook](react/note1.md)
-  * [Context](react/note2.md)
-  * [高阶组件（HOC）](react/note3.md)
-
 * Vue
   * [Vue如何渲染成最终DOM](vue/note1.md)
   * [Vue响应式原理](vue/note8.md)
