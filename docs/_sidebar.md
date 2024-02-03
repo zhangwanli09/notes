@@ -7,7 +7,6 @@
   * [什么是 CDN 服务](other/note3.md)
   * [MVC，MVP，MVVM](other/note7.md)
   * [微前端](other/note8.md)
-  * [Babel 实现原理](other/note9.md)
 
 * CSS
   * [BFC 块格式化上下文](css/note3.md)
