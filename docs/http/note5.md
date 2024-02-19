@@ -29,7 +29,7 @@ Origin: <origin>
 
 注意，在所有访问控制请求（Access control request）中，Origin 首部字段总是被发送。
 
-### CORS 头
+## CORS 头
 
 1. [Access-Control-Allow-Origin](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Origin) 指示请求的资源能共享给哪些域。
 2. [Access-Control-Allow-Credentials](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials) 指示当请求的凭证标记为 true 时，是否响应该请求。
@@ -45,7 +45,7 @@ Origin: <origin>
 
 ![示例](../imgs/img9.jpeg ':size=600')
 
-### JSONP
+## JSONP
 
 还有个古老的方式实现跨域`JSONP`（JSON with Padding）。原理就是利用`<script>`标签没有跨域限制的`漏洞`来达到与第三方通讯的目的。现在几乎很少见。[JSONP](https://segmentfault.com/a/1190000007935557)
 

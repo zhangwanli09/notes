@@ -2,7 +2,7 @@
 
 Object.defineProperty和Proxy，都可以用来做数据劫持，典型应用如数据的双向绑定。
 
-### Object.defineProperty的缺陷
+## Object.defineProperty的缺陷
 
 语法：
 ```javascript
@@ -28,7 +28,7 @@ walk (obj: Object) {
 }
 ```
 
-### Vue重写数组
+## Vue重写数组
 
 解决Object.defineProperty()无法监听数组变化问题。
 
@@ -81,11 +81,11 @@ methodsToPatch.forEach(function (method) {
 Vue中默认的做法就是在数组实例与它的原型之间，插入了一个新的原型对象，这个原型方法实现了这些变异方法，也就拦截了真正数组原型上的方法（因为原型链的机制，找到了就不会继续往上找了）。
 变异方法中增加了自定义逻辑，也调用了真正数组原型上的方法，即实现了目的，也不会对正常使用造成影响。
 
-### 存在的问题
+## 存在的问题
 
 Object.defineProperty的缺陷导致如果直接改变数组下标就无法hack，所有Vue提供$set方法解决此问题。
 
-### Vue检测变化的注意事项
+## Vue检测变化的注意事项
 
 1. 对于对象，Vue无法检测property的添加或删除。由于Vue会在初始化实例时对property执行getter/setter转化，所以property必须在data对象上存在才能让Vue将它转换为响应式。
 2. 对于数组，Vue不能检测以下数组的变动：
@@ -108,7 +108,7 @@ vm.items.splice(indexOfItem, 1, newValue)
 vm.items.splice(newLength)
 ```
 
-### Proxy
+## Proxy
 
 Proxy对象用于创建一个对象的代理，从而实现基本操作的拦截和自定义（如属性查找、赋值、枚举、函数调用等）。
 
@@ -130,7 +130,7 @@ const p = new Proxy(target, handler)
 3. 支持数组，不需要对数组方法进行重写，省去很多hack。
 4. Proxy也不支持嵌套，也需要逐层遍历来解决，不过它的写法是在get里递归调用Proxy并返回。
 
-### 总结
+## 总结
 
 Object.defineProperty和Proxy区别
 1. 当使用defineProperty，修改原来的obj对象就可以触发拦截，而使用Proxy，就必须修改代理对象（即Proxy的实例才可以触发拦截）。

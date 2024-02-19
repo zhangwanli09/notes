@@ -1,6 +1,6 @@
 # 安全相关
 
-### 跨站脚本攻击（XSS）
+## 跨站脚本攻击（XSS）
 
 [XSS](https://developer.mozilla.org/zh-CN/docs/Glossary/Cross-site_scripting) 是一种安全漏洞攻击，攻击者可以利用这种漏洞在网站上`注入恶意代码`。当被攻击者登陆网站时就会自动运行这些恶意代码，从而攻击者可以突破网站的访问权限，冒充受害者。[维基百科 XSS](https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC)
 
@@ -20,7 +20,7 @@ XSS 攻击可分为 3 类：存储型、反射型、DOM 型。
 3. 设置响应头 [Content-Security-Policy](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy)。（参考 CSP）
 
 
-### 跨站请求伪造（CSRF）
+## 跨站请求伪造（CSRF）
 
 [CSRF](https://developer.mozilla.org/zh-CN/docs/Glossary/CSRF) 冒充受信任用户，向服务器发送请求。
 
@@ -40,7 +40,7 @@ CSRF 的本质在于攻击者欺骗用户去访问自己设置的地址。这利
 2. 检查 Referer 字段（同源检测）。
 3. Set-Cookie 时设置 SameSite=Lax，在`跨站请求`时不会被发送。
 
-### 内容安全策略（CSP）
+## 内容安全策略（CSP）
 
 [CSP](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP) 是一个额外的安全层，用于检测并削弱某些特定类型的攻击（XSS，数据注入攻击等）。它的本质是建立一个白名单，告诉浏览器哪些外部资源可以加载和执行。我们只需要配置规则，如何拦截由浏览器自己来实现。
 
@@ -55,7 +55,7 @@ CSRF 的本质在于攻击者欺骗用户去访问自己设置的地址。这利
 
 CSP 的主要目标是减少和报告`XSS`攻击。
 
-### 中间人攻击（MITM）
+## 中间人攻击（MITM）
 
 中间人攻击（Man-in-the-middle attack，MITM）会在消息发出方和接收方之间`拦截双方通讯`。[维基百科 中间人攻击](https://zh.wikipedia.org/wiki/%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB)
 

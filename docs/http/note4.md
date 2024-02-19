@@ -6,7 +6,7 @@
 
 缓存需要`合理`配置，并不是所有资源都永久不变，对一个资源的缓存应截止到其下一次发生改变（不能缓存过期的资源）。
 
-### 缓存的种类
+## 缓存的种类
 
 可大致分为两类：
 
@@ -17,7 +17,7 @@
 
 代理缓存（`共享`）。例如，ISP 或你所在的公司可能会架设一个 web 代理来作为本地网络基础的一部分提供给用户。这样热门的资源就会被重复使用，减少网络拥堵与延迟。
 
-### 缓存的目标
+## 缓存的目标
 
 常见份HTTP缓存只能存储`GET`响应。普通的缓存案例：
 
@@ -27,7 +27,7 @@
 4. 不完全的响应（206），只返回局部信息。
 5. 除了 GET 请求外，如果匹配到作为一个已被定义的`cache`键名的响应。
 
-### 缓存控制
+## 缓存控制
 
 通过 [Cache-Control](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cache-Control) 头（HTTP/1.1定义）来定义`缓存策略`。请求头和响应头都支持这个属性。
 
@@ -60,7 +60,7 @@ Cache-Control: must-revalidate
 
 [Pragma](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Pragma) 头是`HTTP/1.0`标准中定义的，效果同`Cache-Control: no-cache`相同，但是 HTTP 的响应头没有明确定义这个属性，所以它不能完全替代 HTTP/1.1 中定义的 Cache-control 头。通常用来`向后兼容`基于 HTTP/1.0 的客户端，那时候 HTTP/1.1 协议中的 Cache-Control 还没有出来。建议只在需要兼容 HTTP/1.0 客户端的场合下应用 Pragma 首部。
 
-### 新鲜度
+## 新鲜度
 
 理论上，当资源被缓存后，可以永久存储在缓存中。由于缓存空间有限，所以会定期将一些副本删除，这个过程叫`缓存驱逐`。
 
@@ -82,7 +82,7 @@ Cache-Control: must-revalidate
 expirationTime = responseTime + freshnessLifetime - currentAge
 ```
 
-### 改进资源
+## 改进资源
 
 缓存的资源越多，网站性能就越好。
 
@@ -90,7 +90,7 @@ expirationTime = responseTime + freshnessLifetime - currentAge
 
 解决方案（`revving` 技术）：对不频繁更新的文件使用特定的`命名方式`。比如，在 URL 后面（通常是文件名后面）会加上`版本号`、`hash`或`时间戳`。（其实就是被视作一个`全新`的资源，同时设置拥有更长的缓存过期时长）。
 
-### 缓存验证
+## 缓存验证
 
 触发缓存验证：
 
@@ -105,7 +105,7 @@ expirationTime = responseTime + freshnessLifetime - currentAge
 
 当向服务端发起缓存校验的请求时，服务端会返回 200 ok 表示返回正常的结果或者 304 Not Modified(不返回body)表示浏览器可以使用本地缓存文件。`304`的响应头也可以同时`更新`缓存文档的`过期时间`。
 
-### Vary 响应
+## Vary 响应
 
 [Vary](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Vary) 响应头，它决定了对于后续的请求头，应该用一个缓存的回复还是向源服务器请求一个新的回复。
 
@@ -113,7 +113,7 @@ expirationTime = responseTime + freshnessLifetime - currentAge
 
 因为移动版和桌面的客户端的请求头中的`User-Agent`不同， 缓存服务器不会错误地把移动端的内容输出到桌面端到用户。
 
-### 强缓存、协商缓存
+## 强缓存、协商缓存
 
 浏览器缓存策略大致分为两种：`强缓存`和`协商缓存`
 

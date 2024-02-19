@@ -7,7 +7,7 @@
 3. 如果能获得对应页签的引用，通过postMessage()方法也可以实现。
 
 
-### postMessage
+## postMessage
 
 window.postMessage()可以安全实现跨源通信。
 

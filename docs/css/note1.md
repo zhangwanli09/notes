@@ -20,7 +20,7 @@
 
 因为浏览器渲染引擎在构建和渲染渲染树是异步的（谁先构建好谁先显示），那么将`<section>main</section>`部分提前即可优先渲染。
 
-### 圣杯
+## 圣杯
 
 圣杯布局，通过`css`配合`DOM`结构，优化DOM渲染。
 
@@ -45,7 +45,7 @@ header, footer {height: 50px; background-color: #999;}
 
 特殊情况下`有问题`，当窗口无限变窄，布局会混乱。当 main 部分的宽小于 left 部分时就会发生布局混乱。
 
-### 双飞翼
+## 双飞翼
 
 淘宝针对圣杯的缺点做了`优化`。
 
@@ -73,7 +73,7 @@ header, footer {height: 50px; background-color: #999;}
 
 同样使用了`float`和 负值`margin`，不同的是，并没有使用 relative 相对定位，而是增加了 dom 结构，增加了一个层级。解决了圣杯布局的缺陷。
 
-### 绝对定位
+## 绝对定位
 
 虽然绝对定位也可以实现三栏布局，但是`高度不可控`，两侧高度无法支撑总高度。
 
@@ -95,7 +95,7 @@ header, footer {height: 50px; background-color: #999;}
 .right {right: 0; background-color: blue;}
 ```
 
-### 总结
+## 总结
 
 我还是选择`flex`。
 

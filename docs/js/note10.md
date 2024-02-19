@@ -35,7 +35,7 @@ class B extends A {
 
 [参考：ES6 入门](https://es6.ruanyifeng.com/#docs/class-extends)
 
-### 类声明
+## 类声明
 
 函数声明和类声明之间的一个重要区别在于, 函数声明会提升，类声明不会。你首先需要声明你的类，然后再访问它，否则类似以下的代码将抛出 ReferenceError：
 
@@ -46,7 +46,7 @@ let p = new Rectangle() // ReferenceError
 class Rectangle {}
 ```
 
-### 用原型和静态方法绑定 this
+## 用原型和静态方法绑定 this
 
 当调用静态或原型方法时没有指定 this 的值，那么方法内的 this 值将被置为`undefined`。即使你未设置 "use strict" ，因为 class 体内部的代码总是在`严格模式`下执行。
 
@@ -91,7 +91,7 @@ let eat = Animal.eat
 eat() // global object (Window)
 ```
 
-### extends
+## extends
 
 使用`extends`关键字扩展子类。如果子类中定义了构造函数，必须先调用`super()`才能使用`this`。`super`用于调用对象的父对象上的函数。
 

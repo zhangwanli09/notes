@@ -2,7 +2,7 @@
 
 Vuex 是一个专为 Vue.js 应用程序开发的`状态管理模式`。它采用`集中式存储`管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。
 
-### 状态管理模式
+## 状态管理模式
 
 1. `state`，驱动应用的数据源；
 2. `view`，以声明方式将 state 映射到视图；
@@ -19,7 +19,7 @@ Vuex 是一个专为 Vue.js 应用程序开发的`状态管理模式`。它采�
 
 解决思路：抽取组件的共享状态，以一个全局单例模式管理。
 
-### Vuex 基本思想
+## Vuex 基本思想
 
 Vuex 应用的核心是 store。它包含应用中大部分的状态（state）。
 
@@ -30,7 +30,7 @@ Vuex 应用的核心是 store。它包含应用中大部分的状态（state）�
 
 ![Vuex](https://vuex.vuejs.org/vuex.png ':size=600')
 
-### 核心概念
+## 核心概念
 
 1. [State](https://vuex.vuejs.org/zh/guide/state.html)
 2. [Getter](https://vuex.vuejs.org/zh/guide/getters.html)

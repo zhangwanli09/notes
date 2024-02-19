@@ -1,6 +1,6 @@
 # MVC，MVP，MVVM
 
-### MVC
+## MVC
 
 MVC 是是应用最广泛的软件架构之一：`Model`（模型）、`View`（视图）、`Controller`（控制器）。
 
@@ -10,7 +10,7 @@ MVC 是是应用最广泛的软件架构之一：`Model`（模型）、`View`（
 
 Controller 是 Model 和 View 的协调者。View 和 Model 不直接联系。通信都是`单向的`。
 
-### MVP
+## MVP
 
 MVP 模式将 Controller 改名为`Presenter`，同时改变了通信方向。
 
@@ -18,7 +18,7 @@ MVP 模式将 Controller 改名为`Presenter`，同时改变了通信方向。
 2. View 与 Model 不发生联系，都通过 Presenter 传递。
 3. View 不部署任何业务逻辑，称为`被动视图`（Passive View），即没有任何主动性，而 Presenter 部署所有逻辑。
 
-### MVVM
+## MVVM
 
 MVVM 可以看做是一种特殊的 MVP 模式，或者说是对 MVP 模式的一种改良。将 Presenter 改名为`ViewModel`，基本上与 MVP 模式完全一致。
 

@@ -4,7 +4,7 @@ call() 方法的`作用`和 apply() 方法`类似`，区别就是`call()`方法�
 
 作用都是`改变`函数`执行时`的上下文（改变函数运行时的`this指向`）。
 
-### call
+## call
 
 `call()`方法使用一个指定的`this`值和单独给出的一个或多个参数来调用一个函数。参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/call)。
 
@@ -56,7 +56,7 @@ function display () {
 display.call() // 打印 1。严格模式 'use strict' 下，Cannot read property 'sData' of undefined。
 ```
 
-#### 实现思路
+### 实现思路
 
 ```javascript
 Function.prototype.myCall = function (context) {
@@ -74,7 +74,7 @@ Function.prototype.myCall = function (context) {
 }
 ```
 
-### apply
+## apply
 
 `apply()`方法调用一个具有给定`this`值的函数，以及以一个`数组`（或类数组对象）的形式提供的参数。参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)。
 
@@ -109,7 +109,7 @@ const min = Math.min.apply(null, numbers);
 console.log(min) // 2
 ```
 
-### bind
+## bind
 
 `bind()`方法创建一个`新的函数`，在 bind() 被调用时，这个新函数的 this 被指定为 bind() 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)。
 

@@ -1,6 +1,6 @@
 # Vue响应式原理
 
-### 基于数据劫持的优势
+## 基于数据劫持的优势
 
 1. 无需显示调用。例如Vue运用`数据劫持 + 发布订阅`，在数据变动时发布消息给订阅者，触发相应的监听回调驱动视图更新。
 2. 可精确得知变化数据。例如劫持属性的setter，当属性改变可以得到变化的内容，不需要做额外的diff操作。
@@ -11,13 +11,13 @@ Vue官网对响应式原理的描述：
 
 ![响应式原理图](../imgs/img1.png ':size=600')
 
-### 响应式对象
+## 响应式对象
 
 Vue实现响应式的核心是利用`Object.defineProperty()`，具体用法参考[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)。
 
 当把对象传入Vue实例作为data选项，Vue将遍历此对象所有的属性，并使用Object.defineProperty把这些属性全部转为`getter/setter`。可以简单的把这种对象称为响应式对象。Object.defineProperty是ES5中一个无法shim的特性，这也就是Vue不支持IE8以及更低版本浏览器的原因。
 
-#### initState
+### initState
 
 在Vue的初始化阶段，`_init`方法执行的时候，会执行`initState(vm)`方法，它主要是对props、methods、data、computed和watch等属性做初始化操作。
 
@@ -145,7 +145,7 @@ function initData (vm: Component) {
 
 `props`和`data`的初始化都是把它们变成响应式对象。
 
-#### proxy
+### proxy
 
 `proxy`的作用是把`props`和`data`上的属性代理到`vm`实例上。所以定义在props中的属性，也可以通过vm实例访问到。
 
@@ -172,7 +172,7 @@ export function proxy (target: Object, sourceKey: string, key: string) {
 1. 对于props，对`vm._props.xxx`的读写变成了`vm.xxx`的读写。
 2. 对于data，对`vm._data.xxx`的读写变成了对`vm.xxx`的读写。
 
-#### observe
+### observe
 
 observe是用来监听数据变化的。
 
@@ -208,7 +208,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 }
 ```
 
-#### Observer
+### Observer
 
 Observer作用是给对象属性添加getter和setter，用于依赖收集和派发更新。
 
@@ -331,7 +331,7 @@ methodsToPatch.forEach(function (method) {
 })
 ```
 
-#### defineReactive
+### defineReactive
 
 defineReactive的作用是定义一个响应式对象，给对象添加getter和setter。
 
@@ -406,18 +406,18 @@ export function defineReactive (
 }
 ```
 
-#### 总结
+### 总结
 
 响应式对象的核心就是利用`Object.defineProperty`给数据添加了`getter/setter`，目的就是为了在访问数据和修改数据时能自动执行一些逻辑：getter做依赖收集，setter做派发更新。
 
-### 依赖收集
+## 依赖收集
 
 响应式对象的getter部分就是做依赖收集的。defineReactive方法中重点关注：
 
 1. `const dep = new Dep()`实例化一个Dep实例。
 2. get函数中通过`dep.depend()`做依赖收集。这里涉及到`childOb`的判断逻辑。
 
-#### Dep
+### Dep
 
 Dep是整个getter依赖收集的核心。
 
@@ -490,7 +490,7 @@ Dep实际上是对Watcher的管理。注意点：
 1. 静态属性`target`，这是全局唯一`Watcher`。在同一时间只能有一个全局`Watcher`被计算。
 2. 它的自身属性`subs`也是`Watcher`的数组。
 
-#### Watcher
+### Watcher
 
 Watcher的构造函数中定义了一些和Dep相关的属性：
 
@@ -734,7 +734,7 @@ export default class Watcher {
 }
 ```
 
-#### 过程分析
+### 过程分析
 
 依赖收集大致过程：
 1. Vue的`mount`过程中实例化一个渲染`watcher`。
@@ -868,11 +868,11 @@ this.cleanupDeps()
 
 因此Vue设计了在每次添加完新的订阅，会移除掉旧的订阅，这样就保证了在我们刚才的场景中，如果渲染b模板的时候去修改a模板的数据，a数据订阅回调已经被移除了，所以不会有任何浪费。
 
-#### 总结
+### 总结
 
 收集依赖的目的是为了当这些响应式数据发生变化，触发它们的setter的时候，能知道应该通知哪些订阅者去做相应的逻辑处理，这个过程叫派发更新，其实 Watcher 和 Dep 就是一个非常经典的`观察者设计模式`的实现。
 
-### 派发更新
+## 派发更新
 
 上面依赖收集的目的是为了当修改数据时，可以对相关的依赖派发更新。参考`setter`部分逻辑：
 
@@ -909,7 +909,7 @@ setter中2个关键逻辑：
 1. shallow如果是false，会对新设置的值变成响应式对象`childOb = !shallow && observe(newVal)`。
 2. 通知所有的订阅者`dep.notify()`。
 
-#### 过程分析
+### 过程分析
 
 当对响应式数据做修改，会触发setter逻辑，会调用`dep.notify()`，它是Dep的实例方法。
 
@@ -957,7 +957,7 @@ export default class Watcher {
 
 对于Watcher的不同状态，会执行不同的逻辑，在一般组件数据更新的场景，会走最后一个逻辑`queueWatcher(this)`。
 
-#### queueWatcher
+### queueWatcher
 
 ```javascript
 const queue: Array<Watcher> = []
@@ -1006,7 +1006,7 @@ export function queueWatcher (watcher: Watcher) {
 2. waiting保证nextTick只会被调用一次。
 3. nextTick可以理解它是在下一个tick，也就是异步的去执行flushSchedulerQueue。
 
-#### flushSchedulerQueue
+### flushSchedulerQueue
 
 flushSchedulerQueue的一些重要逻辑：
 1. 队列排序。对队列做从小到大排序，目的是确保以下几点：
@@ -1087,7 +1087,7 @@ function flushSchedulerQueue () {
 }
 ```
 
-#### watcher.run()
+### watcher.run()
 
 watcher.run()逻辑分析：
 
@@ -1137,11 +1137,11 @@ export default class Watcher {
   ```
   这就是当修改组件相关的响应式数据的时，会触发组件重新渲染的原因。
 
-#### 总结
+### 总结
 
 派发更新实际上就是当数据发生变化时，触发setter逻辑，把在依赖收集过程中订阅的所有观察者（watcher），都触发它们的update过程，这个过程利用了队列做了优化，在nextTick后执行所有watcher的run，最后执行它们的回调函数。
 
-### 原理图
+## 原理图
 
 ![原理图](../imgs/img2.png ':size=600')
 

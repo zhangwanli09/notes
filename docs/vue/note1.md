@@ -1,10 +1,10 @@
 # Vue如何渲染成最终DOM
 
-### 数据驱动
+## 数据驱动
 
 视图由数据驱动生成的，当对视图进行修改，不会直接操作DOM，而是通过修改数据。这样做可以大量简化代码，更专注于逻辑，有利于代码维护。
 
-### new Vue
+## new Vue
 
 Vue实际上是用function实现的类。
 
@@ -85,7 +85,7 @@ Vue的初始化主要逻辑是：合并配置，初始化生命周期，初始�
 
 `_init`方法中把不同的功能逻辑拆成单独的函数处理，非常清晰。在初始化的最后，检测如果有`el`属性，则调用`vm.$mount`方法挂载`vm`，挂载的目标就是把模板渲染成最终的`DOM`。
 
-### Vue实例挂载
+## Vue实例挂载
 
 通过`$mount`实例方法挂载`vm`。不同平台（web，weex）、构建方式对$mount的实现也不同。重点分析compiler版本（web）的$mount实现。
 
@@ -269,7 +269,7 @@ export function mountComponent (
 
 `mountComponent`方法会完成整个渲染工作，最核心的2个方法：`vm._render`和`vm._update`。
 
-### render
+## render
 
 Vue的`_render`方法是实例的私有方法，用来把实例渲染成一个`虚拟Node`。
 
@@ -338,7 +338,7 @@ Vue.prototype._render = function (): VNode {
 
 `vm._render`最终是通过执行`createElement`方法返回vnode，它是一个虚拟Node。
 
-### Virtual DOM
+## Virtual DOM
 
 真正的DOM元素非常庞大，当频繁操作DOM更新，会产生一定的性能问题。
 
@@ -446,7 +446,7 @@ export function createElement (
 
 每个VNode有children，children每个元素也是一个VNode，这样就形成了一个`VNode Tree`，它很好的描述了DOM Tree。
 
-### update
+## update
 
 把`vm._render`创建的`VNode`渲染成真实的`DOM`并渲染出来，需要通过`vm._update`完成。
 
